@@ -44,6 +44,11 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
+    public void goToLoginScreen(View view){
+        Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+        startActivity(intent);
+    }
+
     private void registerUser(){
         final EditText eLogin = (EditText) findViewById(R.id.tName);
         final EditText eEmail = (EditText) findViewById(R.id.tEmail);
@@ -52,15 +57,14 @@ public class RegisterActivity extends AppCompatActivity {
         final String password = eEmail.getText().toString().trim();
         final String email = ePassword.getText().toString().trim();
 
-        //URL IN ASSETS FILE CALLED SERVER_URL
+        //URL IN ASSETS FILE CALLED CONFIG
         //TODO: Create private asset config file (with JSON object?) and class to get data from it
         try {
             AssetManager am = getApplicationContext().getAssets();
             InputStream is = am.open("private/CONFIG");
-            final String REGISTER_URL = convert(is, Charset.defaultCharset());
+            final String REGISTER_URL = convert(is, Charset.defaultCharset())+"register.php";
 
-
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, REGISTER_URL,
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, REGISTER_URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {

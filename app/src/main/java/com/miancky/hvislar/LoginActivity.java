@@ -18,6 +18,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
@@ -56,6 +59,24 @@ public class LoginActivity extends AppCompatActivity {
                         @Override
                         public void onResponse(String response) {
                             Toast.makeText(LoginActivity.this,response,Toast.LENGTH_LONG).show();
+                            try {
+                                JSONObject JSONresponse = new JSONObject(response);
+                                if(!JSONresponse.getBoolean("success")){
+                                    Toast.makeText(LoginActivity.this,"Login failed, incorrect data :)",Toast.LENGTH_LONG).show();
+                                }
+                                else{
+                                    String name = JSONresponse.getString("name");
+                                    String email = JSONresponse.getString("email");
+
+                                    Intent intent = new Intent(LoginActivity.this, UserProfile.class);
+                                    intent.putExtra("name", name);
+                                    intent.putExtra("email", email);
+                                    startActivity(intent);
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
                         }
                     },
                     new Response.ErrorListener() {

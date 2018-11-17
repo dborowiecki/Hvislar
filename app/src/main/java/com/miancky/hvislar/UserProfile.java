@@ -3,6 +3,7 @@ package com.miancky.hvislar;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 public class UserProfile extends AppCompatActivity {
@@ -22,5 +23,17 @@ public class UserProfile extends AppCompatActivity {
 
         welcomeMessage.setText(welcomeText);
         username.setText(name);
+    }
+
+    public void goToFriendListScreen(View view){
+        Intent intent = new Intent(UserProfile.this, ListOfFriendsActivity.class);
+        intent.putExtra("name", getIntent().getStringExtra("name"));
+        intent.putExtra("email", intent.getStringExtra("email"));
+        startActivity(intent);
+    }
+
+    public void goToTitleScreen(View view){
+        Intent intent = new Intent(UserProfile.this, MainActivity.class);
+        startActivity(intent);
     }
 }

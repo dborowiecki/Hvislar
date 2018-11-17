@@ -31,7 +31,8 @@
             android:label="@string/title_activity_register"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".UserProfile" />
-        <activity android:name=".ChatActivity"></activity>
+        <activity android:name=".ChatActivity" />
+        <activity android:name=".ListOfFriendsActivity"></activity>
     </application>
 
 </manifest>

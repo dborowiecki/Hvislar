@@ -32,7 +32,8 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".UserProfile" />
         <activity android:name=".ChatActivity" />
-        <activity android:name=".ListOfFriendsActivity"></activity>
+        <activity android:name=".ListOfFriendsActivity" />
+        <activity android:name=".AddNewFriendsActivity"></activity>
     </application>
 
 </manifest>

@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Hvislar</string>
     <string name="title_activity_things">Things</string>
-    <string name="title_activity_login">LoginActivity</string>
-    <string name="title_activity_register">RegisterActivity</string>
+    <string name="title_activity_register">Register</string>
+    <string name="tap_here_to_continue">Tap Here to Continue</string>
+    <string name="welcome_to_hvislar">Welcome to Hvislar</string>
 </resources>

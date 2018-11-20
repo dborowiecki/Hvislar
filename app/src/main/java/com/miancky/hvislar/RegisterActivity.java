@@ -37,22 +37,23 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        final EditText eLogin = (EditText) findViewById(R.id.tName);
-        final EditText eEmail = (EditText) findViewById(R.id.tEmail);
-        final EditText ePassword = (EditText) findViewById(R.id.tPassword);
-        final Button signUp= (Button) findViewById(R.id.bRegister);
+        final EditText eLogin = findViewById(R.id.tName);
+        final EditText eEmail = findViewById(R.id.tEmail);
+        final EditText ePassword = findViewById(R.id.tPassword);
+        final Button signUp= findViewById(R.id.bRegister);
 
     }
 
     public void goToLoginScreen(View view){
-        Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-        startActivity(intent);
+        /*Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+        startActivity(intent);*/
+        finish();
     }
 
     private void registerUser(){
-        final EditText eLogin = (EditText) findViewById(R.id.tName);
-        final EditText eEmail = (EditText) findViewById(R.id.tEmail);
-        final EditText ePassword = (EditText) findViewById(R.id.tPassword);
+        final EditText eLogin = findViewById(R.id.tName);
+        final EditText eEmail = findViewById(R.id.tEmail);
+        final EditText ePassword = findViewById(R.id.tPassword);
         final String username = eLogin.getText().toString().trim();
         final String password = eEmail.getText().toString().trim();
         final String email = ePassword.getText().toString().trim();
@@ -79,7 +80,7 @@ public class RegisterActivity extends AppCompatActivity {
                 }){
             @Override
             protected Map<String,String> getParams(){
-                Map<String,String> params = new HashMap<String, String>();
+                Map<String,String> params = new HashMap<>();
                 params.put("name",username);
                 params.put("password",password);
                 params.put("email", email);
@@ -101,7 +102,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     //TODO: refactor, move to another class
-    public String convert(InputStream inputStream, Charset charset) throws IOException {
+    public String convert(InputStream inputStream, Charset charset) {
         Scanner scanner = new Scanner(inputStream, charset.name());
         return scanner.useDelimiter("\\A").next();
     }

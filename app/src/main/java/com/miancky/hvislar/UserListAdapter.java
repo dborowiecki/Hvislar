@@ -133,7 +133,6 @@ public class UserListAdapter extends BaseAdapter implements ListAdapter {
                 protected Map<String,String> getParams(){
                     Map<String,String> params = new HashMap<String, String>();
                     params.put("username", intent.getStringExtra("name"));
-                    //TODO: incorrect fetching friend name
                     params.put("friend_name", newFriendName);
                     return params;
                 }

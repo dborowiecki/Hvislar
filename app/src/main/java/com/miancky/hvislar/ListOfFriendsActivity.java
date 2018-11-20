@@ -29,10 +29,10 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-
 public class ListOfFriendsActivity extends AppCompatActivity {
 
     @Override
@@ -46,10 +46,14 @@ public class ListOfFriendsActivity extends AppCompatActivity {
 
         ListView listOfFriends = (ListView)findViewById(R.id.lvFriends);
         // create the ArrayList to store the titles of nodes
-        ArrayList<String> listItems = new ArrayList<String>();
+        final ArrayList<String> listItems = new ArrayList<String>();
         //TODO: should take friends from db
-        listItems.add("Test1");
-        listItems.add("Test2");
+        getListOfFriends(new VolleyCallback() {
+            @Override
+            public void onSuccess(List<String> result) {
+                listItems.addAll(result);
+            }
+        });
         ArrayAdapter ad = new ArrayAdapter(ListOfFriendsActivity.this,
                 android.R.layout.simple_list_item_1, listItems);
 
@@ -65,6 +69,7 @@ public class ListOfFriendsActivity extends AppCompatActivity {
                 Toast.makeText(ListOfFriendsActivity.this, "" + position, Toast.LENGTH_SHORT).show();
             }
         });
+        Toast.makeText(ListOfFriendsActivity.this, listItems.toString(), Toast.LENGTH_SHORT).show();
     }
 
     public void goToUserProfile(View view){
@@ -80,17 +85,16 @@ public class ListOfFriendsActivity extends AppCompatActivity {
         intent.putExtra("email", intent.getStringExtra("email"));
         startActivity(intent);
     }
-    public void getListOfFriends(View view){
+    public void getListOfFriends(final VolleyCallback callback){
         try {
             AssetManager am = getApplicationContext().getAssets();
             InputStream is = am.open("private/CONFIG");
-            final String LOGIN_URL = convert(is, Charset.defaultCharset())+"getAllUsers.php";
-
+            final String LOGIN_URL = convert(is, Charset.defaultCharset())+"getUserFriends.php";
             StringRequest stringRequest = new StringRequest(Request.Method.POST, LOGIN_URL,
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
-                            Toast.makeText(ListOfFriendsActivity.this,response,Toast.LENGTH_LONG).show();
+                            List<String> recivedUsers = new ArrayList<>();
                             try {
                                 JSONObject JSONresponse = new JSONObject(response);
                                 if(!JSONresponse.getBoolean("success")){
@@ -98,11 +102,12 @@ public class ListOfFriendsActivity extends AppCompatActivity {
                                 }
                                 else{
                                     JSONArray friends = JSONresponse.getJSONArray("users");
-                                    List<String> list = new ArrayList<String>();
                                     for(int i = 0; i < friends.length(); i++){
-                                        list.add(friends.getJSONObject(i).getString("name"));
+                                        recivedUsers.add(friends.getString(i));
+                                        Toast.makeText(ListOfFriendsActivity.this,"hello",Toast.LENGTH_LONG).show();
                                     }
-                                    Toast.makeText(ListOfFriendsActivity.this,list.toString(),Toast.LENGTH_LONG).show();
+                                    Toast.makeText(ListOfFriendsActivity.this,"hello",Toast.LENGTH_LONG).show();
+                                    callback.onSuccess(recivedUsers);
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -119,6 +124,7 @@ public class ListOfFriendsActivity extends AppCompatActivity {
                 @Override
                 protected Map<String,String> getParams(){
                     Map<String,String> params = new HashMap<String, String>();
+                    params.put("username", getIntent().getStringExtra("name"));
                     return params;
                 }
 

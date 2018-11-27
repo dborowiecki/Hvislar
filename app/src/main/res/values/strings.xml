@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Hvislar</string>
     <string name="title_activity_things">Things</string>
-    <string name="title_activity_login">LoginActivity</string>
-    <string name="title_activity_register">RegisterActivity</string>
+    <string name="title_activity_register">Register</string>
+    <string name="tap_here_to_continue">Tap Here to Continue</string>
+    <string name="welcome">Welcome to Hvislar!</string>
+    <string name="description">Be one of the first persons to ever experience a brand new way of communication, friend finding and social games.</string>
+    <string name="enjoy">ENJOY!</string>
 </resources>

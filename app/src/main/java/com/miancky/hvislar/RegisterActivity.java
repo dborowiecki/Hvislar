@@ -8,11 +8,13 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -63,10 +65,11 @@ public class RegisterActivity extends AppCompatActivity {
         try {
             AssetManager am = getApplicationContext().getAssets();
             InputStream is = am.open("private/CONFIG");
-            final String REGISTER_URL = convert(is, Charset.defaultCharset())+"register.php";
+            final String REGISTER_URL = convert(is, Charset.defaultCharset())+"register/";
 
             StringRequest stringRequest = new StringRequest(Request.Method.POST, REGISTER_URL,
                 new Response.Listener<String>() {
+
                     @Override
                     public void onResponse(String response) {
                         Toast.makeText(RegisterActivity.this,response,Toast.LENGTH_LONG).show();
@@ -75,8 +78,18 @@ public class RegisterActivity extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(RegisterActivity.this,error.toString()+REGISTER_URL,Toast.LENGTH_LONG).show();
+
+                        Log.e("Volly Error", error.toString());
+
+                        NetworkResponse networkResponse = error.networkResponse;
+                        if (networkResponse != null) {
+                            Log.e("Status code", String.valueOf(networkResponse.statusCode));
+                        }
                     }
+                    /*@Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(RegisterActivity.this,error.toString()+REGISTER_URL,Toast.LENGTH_LONG).show();
+                    }*/
                 }){
             @Override
             protected Map<String,String> getParams(){

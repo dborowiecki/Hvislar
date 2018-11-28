@@ -52,7 +52,7 @@ public class LoginActivity extends AppCompatActivity {
         try {
             AssetManager am = getApplicationContext().getAssets();
             InputStream is = am.open("private/CONFIG");
-            final String LOGIN_URL = convert(is, Charset.defaultCharset())+"login.php";
+            final String LOGIN_URL = convert(is, Charset.defaultCharset())+"login/";
 
             StringRequest stringRequest = new StringRequest(Request.Method.POST, LOGIN_URL,
                     new Response.Listener<String>() {

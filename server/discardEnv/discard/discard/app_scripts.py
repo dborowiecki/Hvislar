@@ -35,7 +35,7 @@ def register(request):
 @csrf_exempt
 def login(request):
     response = {
-            'success': 'xD'
+            'success': False
         }
     try:
         data = request.POST
@@ -49,6 +49,28 @@ def login(request):
             account.last_time_logged = datetime.now()
             response['name'] = account.username
             response['email'] = account.email
+            response['success'] = True
+
+        return JsonResponse(response)
+
+    except Exception as e:
+        print(e)
+        return JsonResponse(response)
+
+@csrf_exempt
+def test_message(request):
+    response = {
+            'success': False
+        }
+    try:
+        data     = request.POST
+        user     = request.POST.get("username")
+        password = request.POST.get("password")
+        message  = request.POST.get("message")
+        account  = Account.objects.get(passwd = passwd, username = user)
+
+        if account is not None:
+            print("User %s sended message: %s" % (name, message))
             response['success'] = True
 
         return JsonResponse(response)

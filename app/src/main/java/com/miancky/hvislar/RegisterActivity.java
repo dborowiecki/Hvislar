@@ -47,8 +47,6 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     public void goToLoginScreen(View view){
-        /*Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-        startActivity(intent);*/
         finish();
     }
 
@@ -70,7 +68,17 @@ public class RegisterActivity extends AppCompatActivity {
 
                     @Override
                     public void onResponse(String response) {
-                        Toast.makeText(RegisterActivity.this,response,Toast.LENGTH_LONG).show();
+                        try{
+                            JSONObject JSONResponse=new JSONObject(response);
+                            if(JSONResponse.getBoolean("success")){
+                                Toast.makeText(RegisterActivity.this,getString(R.string.registration_completed),Toast.LENGTH_LONG).show();
+                                finish();
+                            }else{
+                                Toast.makeText(RegisterActivity.this,getString(R.string.registration_failed),Toast.LENGTH_LONG).show();
+                            }
+                        } catch(JSONException e){
+                            e.printStackTrace();
+                        }
                     }
                 },
                 new Response.ErrorListener() {

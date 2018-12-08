@@ -166,8 +166,8 @@ ENV/
 env.bak/
 venv.bak/
 server/discardEnv/bin/
-server/discardEnv/include/
-server/discardEnv/lib/
+server/discardEnv/include/*
+server/discardEnv/lib/*
 
 # Spyder project settings
 .spyderproject

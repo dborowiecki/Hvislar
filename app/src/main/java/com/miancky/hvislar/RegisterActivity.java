@@ -63,9 +63,7 @@ public class RegisterActivity extends AppCompatActivity {
         //URL IN ASSETS FILE CALLED CONFIG
         //TODO: Create private asset config file (with JSON object?) and class to get data from it
         try {
-            AssetManager am = getApplicationContext().getAssets();
-            InputStream is = am.open("private/CONFIG");
-            final String REGISTER_URL = convert(is, Charset.defaultCharset())+"register/";
+            final String REGISTER_URL = getString(R.string.ip)+"register/";
 
             StringRequest stringRequest = new StringRequest(Request.Method.POST, REGISTER_URL,
                 new Response.Listener<String>() {

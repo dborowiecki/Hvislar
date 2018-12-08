@@ -168,6 +168,7 @@ venv.bak/
 server/discardEnv/bin/
 server/discardEnv/include/*
 server/discardEnv/lib/*
+server/discardEnv/lib/python3.6/*
 
 # Spyder project settings
 .spyderproject

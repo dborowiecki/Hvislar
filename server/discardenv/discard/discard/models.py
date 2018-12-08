@@ -2,6 +2,7 @@ from django.db import models
 from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User
 
+
 class Account(models.Model):
     id_account_pk    = models.AutoField(primary_key=True)
     username         = models.CharField(unique = True, max_length=40)
@@ -10,23 +11,18 @@ class Account(models.Model):
     dos              = models.DateTimeField(auto_now_add=True)
     last_time_logged = models.DateTimeField(auto_now_add=True)
 
-    def add_friend(friend):
+    def add_friend(self, friend):
         success = False
         try:
-            contact1 = Contact(
-                id_user_fk      =  id_account_pk,
-                id_account_fk   =  friend.id_account_pk)
-            contact2 = Contact(
-                id_user_fk      =  friend.id_account_pk,
-                id_account_fk   =  id_account_pk)
-
-            contact1.save()
-            contact2.save()
+            contact = Contact(id_account_fk =  friend)
+            contact.save()
+            account_contact_list = ContactList(self.id_account_pk, friend.id_account_pk)
+            account_contact_list.save()
             success  = True
         except Exception as e:
             print(e)
         finally:
-            return succes
+            return success
 
     class Meta:
         db_table = '"account"'
@@ -34,8 +30,7 @@ class Account(models.Model):
 
 class Contact(models.Model):
     id_contact_pk   = models.AutoField(primary_key=True)
-    id_user_fk      = models.ForeignKey(Account, on_delete=models.CASCADE)
-    id_account_fk   = models.ForeignKey(Account,related_name='%(class)s_friend', on_delete=models.CASCADE)
+    id_account_fk   = models.ForeignKey(Account, on_delete=models.CASCADE)
     contact_name    = models.CharField(max_length=20)
     status          = models.BooleanField(default=False)
    
@@ -44,12 +39,13 @@ class Contact(models.Model):
 
 
 class ContactRequest(models.Model):
-    id_account_fk               = models.ForeignKey(Account, on_delete=models.CASCADE)
+    id_account_fk               = models.ForeignKey(Account, on_delete=models.CASCADE, primary_key=True)
     id_requesting_account_fk    = models.ForeignKey(Account, related_name='%(class)s_initiate',on_delete=models.CASCADE)
     request_message             = models.CharField(max_length=250)
 
     class Meta:
         db_table = '"contact_requests"'
+        unique_together = ('id_account_fk', 'id_requesting_account_fk')
    
 
 class Conversation(models.Model):
@@ -68,3 +64,11 @@ class Message(models.Model):
     class Meta:
         db_table = '"message"'
 
+
+class ContactList(models.Model):
+    id_account_fk = models.ForeignKey(Account, on_delete = models.CASCADE, primary_key=True)
+    id_contact_fk = models.ForeignKey(Account, related_name='frind', on_delete = models.CASCADE)
+
+    class Meta:
+        db_table        = '"contact_list"'
+        unique_together = ('id_account_fk', 'id_contact_fk')

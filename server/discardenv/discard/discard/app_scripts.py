@@ -75,10 +75,10 @@ def request_contact(request):
             id_account_fk            = contact_account,
             id_requesting_account_fk = user_account,
             request_message          = user_message)
-
+        #TODO: IF THERE IS RESPONSE FROM 2 USER SHOULD PAIR THEM
         contact_request.save()
 
-        request['success'] = True
+        response['success'] = True
 
     except Exception as e:
         print(e)
@@ -102,9 +102,10 @@ def request_contact_response(request):
             id_requesting_account_fk = responded_user.id_account_pk)
 
         if request.POST.get("response") == 'Accept' and responded_request is not None:
-            added = user_account.add_friend(responded_user)
-            if added:
-                responded_request.delete
+            added1 = user_account.add_friend(responded_user)
+            added2 = responded_user.add_friend(user_account)
+            if added1 and added2:
+                responded_request.delete()
                 response['success'] = True
 
     except Exception as e:

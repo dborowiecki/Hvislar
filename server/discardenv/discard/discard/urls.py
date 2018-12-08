@@ -22,6 +22,6 @@ urlpatterns = [
     path('register/', register),
     path('login/', login),
     path('message/', test_message),
-    path('addContact/', request_contact),
-    path('responseRequest/', request_contact_response),
+    path('requestContact/', request_contact),
+    path('answerContactRequest/', request_contact_response),
 ]

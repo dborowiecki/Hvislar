@@ -72,8 +72,8 @@ def request_contact(request):
         contact_account = Account.objects.get(username = contact_name)
 
         contact_request = ContactRequest(
-            id_account_fk            = contact_account,
-            id_requesting_account_fk = user_account,
+            account_fk            = contact_account,
+            requesting_account_fk = user_account,
             request_message          = user_message)
         #TODO: IF THERE IS RESPONSE FROM 2 USER SHOULD PAIR THEM
         contact_request.save()
@@ -98,8 +98,8 @@ def request_contact_response(request):
         user_account         = Account.objects.get(passwd = passwd, email = email)
         responded_user       = Account.objects.get(username = responded_user)
         responded_request    = ContactRequest.objects.get(
-            id_account_fk            = user_account.id_account_pk,
-            id_requesting_account_fk = responded_user.id_account_pk)
+            account_fk            = user_account.account_pk,
+            requesting_account_fk = responded_user.account_pk)
 
         if request.POST.get("response") == 'Accept' and responded_request is not None:
             added1 = user_account.add_friend(responded_user)

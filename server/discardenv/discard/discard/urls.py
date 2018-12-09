@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from .app_scripts import register, login, test_message, request_contact, request_contact_response
+from .app_scripts import register, login, test_message, request_contact, request_contact_response, send_message
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -24,4 +24,5 @@ urlpatterns = [
     path('message/', test_message),
     path('requestContact/', request_contact),
     path('answerContactRequest/', request_contact_response),
+    path('sendMessage/', send_message)
 ]

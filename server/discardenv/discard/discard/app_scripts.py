@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, get_user_model
 from django.http import JsonResponse
 from datetime import datetime
 from django.views.decorators.csrf import csrf_exempt
-from .models import Account, ContactRequest
+from .models import Account, ContactRequest, Conversation, Contact, ContactList
 import json
 
 @csrf_exempt
@@ -16,12 +16,12 @@ def register(request):
         data = request.POST
         
         account = Account(
-            username = request.POST.get("name"),
+            username = request.POST.get("username"),
             passwd   = request.POST.get("password"),
             email    = request.POST.get("email"))
 
         account.save()
-        if Account.objects.get(username= request.POST.get("name")) is not None:
+        if Account.objects.get(username= request.POST.get("username")) is not None:
             response['username'] = account.username
             response['email'] = account.email
             response['success'] = True
@@ -102,8 +102,10 @@ def request_contact_response(request):
             requesting_account_fk = responded_user.account_pk)
 
         if request.POST.get("response") == 'Accept' and responded_request is not None:
-            added1 = user_account.add_friend(responded_user)
-            added2 = responded_user.add_friend(user_account)
+            new_conversation = Conversation()
+            new_conversation.save()
+            added1 = user_account.add_friend(responded_user, new_conversation)
+            added2 = responded_user.add_friend(user_account, new_conversation)
             if added1 and added2:
                 responded_request.delete()
                 response['success'] = True
@@ -125,11 +127,37 @@ def test_message(request):
         user     = request.POST.get("username")
         password = request.POST.get("password")
         message  = request.POST.get("message")
-        account  = Account.objects.get(passwd = passwd, username = user)
+        account  = Account.objects.get(passwd = password, username = user)
 
         if account is not None:
             print("User %s sended message: %s" % (name, message))
             response['success'] = True
+
+        return JsonResponse(response)
+
+    except Exception as e:
+        print(e)
+        response['error'] = str(e)
+    
+    return JsonResponse(response)
+
+@csrf_exempt
+def send_message(request):
+    response = {
+            'success': False
+        }
+    try:
+        user        = request.POST.get("username")
+        reciver_name  = request.POST.get("reciver_name")
+        password    = request.POST.get("password")
+        message     = request.POST.get("message")
+        account     = Account.objects.get(passwd = password, username = user)
+        reciver     = Account.objects.get(username = reciver_name)
+
+        if reciver.confirm_contact(account):
+            response['found'] = True
+        else:
+            response['found'] = False
 
         return JsonResponse(response)
 

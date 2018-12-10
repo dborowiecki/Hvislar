@@ -159,6 +159,8 @@ def send_message(request):
         else:
             response['found'] = False
 
+        
+
         return JsonResponse(response)
 
     except Exception as e:

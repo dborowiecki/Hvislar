@@ -43,7 +43,7 @@ CREATE TABLE message (
 );
 
 CREATE TABLE messages_in_conversation (
-	contact_fk_id INTEGER REFERENCES contact(contact_pk),
+	contact_fk_id INTEGER REFERENCES conversation(conversation_pk),
 	message_fk_id INTEGER REFERENCES message(message_pk)
 );
 

@@ -30,9 +30,9 @@ class Account(models.Model):
         user_contcts = [f.contact_fk for f in ContactList.objects.filter(account_fk=self).all()]
         for contact in user_contcts:
             if account == contact.account_fk:
-                return True
+                return contact.conversation_fk
 
-        return False
+        return None
 
 
 
@@ -42,7 +42,11 @@ class Account(models.Model):
 
 class Conversation(models.Model):
     conversation_pk = models.AutoField(primary_key=True)
-  
+    
+    def add_message_to_conversation(self, message):
+        new_in_conversation = MessagesInConversation(self, message)
+        new_in_conversation.save()
+
     class Meta:
         db_table = '"conversation"'
 
@@ -77,6 +81,15 @@ class Message(models.Model):
     class Meta:
         db_table = '"message"'
 
+
+
+class MessagesInConversation(models.Model):
+    conversation_fk = models.ForeignKey(Conversation, primary_key = True, on_delete = models.CASCADE)
+    message_fk_id   = models.ForeignKey(Message, on_delete = models.CASCADE)
+
+    class Meta:
+        db_table = '"messages_in_conversation"'
+        unique_together = ('contact_fk', 'message_fk')
 
 class ContactList(models.Model):
     account_fk = models.ForeignKey(Account, on_delete = models.CASCADE, primary_key=True)

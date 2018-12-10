@@ -154,12 +154,17 @@ def send_message(request):
         account     = Account.objects.get(passwd = password, username = user)
         reciver     = Account.objects.get(username = reciver_name)
 
-        if reciver.confirm_contact(account):
+        conversation = reciver.confirm_contact(account)
+
+        if conversation is not None:
             response['found'] = True
+            m = Message(conversation_fk = conversation, content_of_message = message)
+            m.save()
+            conversation.add_message_to_conversation(m)
         else:
             response['found'] = False
 
-        
+
 
         return JsonResponse(response)
 

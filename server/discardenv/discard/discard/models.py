@@ -42,10 +42,6 @@ class Account(models.Model):
 
 class Conversation(models.Model):
     conversation_pk = models.AutoField(primary_key=True)
-    
-    def add_message_to_conversation(self, message):
-        new_in_conversation = MessagesInConversation(self, message)
-        new_in_conversation.save()
 
     class Meta:
         db_table = '"conversation"'
@@ -75,21 +71,12 @@ class ContactRequest(models.Model):
 class Message(models.Model):
     message_pk          = models.AutoField(primary_key=True)
     conversation_fk     = models.ForeignKey(Conversation, on_delete=models.CASCADE)
+    sender_fk           = models.ForeignKey(Account, on_delete=models.CASCADE)
     content_of_msg      = models.CharField(max_length=250)
     send_time           = models.DateTimeField(auto_now_add=True)
    
     class Meta:
         db_table = '"message"'
-
-
-
-class MessagesInConversation(models.Model):
-    conversation_fk = models.ForeignKey(Conversation, primary_key = True, on_delete = models.CASCADE)
-    message_fk_id   = models.ForeignKey(Message, on_delete = models.CASCADE)
-
-    class Meta:
-        db_table = '"messages_in_conversation"'
-        unique_together = ('contact_fk', 'message_fk')
 
 class ContactList(models.Model):
     account_fk = models.ForeignKey(Account, on_delete = models.CASCADE, primary_key=True)

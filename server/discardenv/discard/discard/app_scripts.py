@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, get_user_model
 from django.http import JsonResponse
 from datetime import datetime
 from django.views.decorators.csrf import csrf_exempt
-from .models import Account, ContactRequest, Conversation, Contact, ContactList
+from .models import Account, ContactRequest, Conversation, Contact, ContactList, Message
 import json
 
 @csrf_exempt
@@ -95,13 +95,14 @@ def request_contact_response(request):
         passwd               = request.POST.get("password")
         email                = request.POST.get("email")
         responded_user       = request.POST.get("responsed_user")
+        response             = request.POST.get("response")
         user_account         = Account.objects.get(passwd = passwd, email = email)
         responded_user       = Account.objects.get(username = responded_user)
         responded_request    = ContactRequest.objects.get(
             account_fk            = user_account.account_pk,
             requesting_account_fk = responded_user.account_pk)
 
-        if request.POST.get("response") == 'Accept' and responded_request is not None:
+        if response == 'Accept' and responded_request is not None:
             new_conversation = Conversation()
             new_conversation.save()
             added1 = user_account.add_friend(responded_user, new_conversation)
@@ -147,20 +148,20 @@ def send_message(request):
             'success': False
         }
     try:
-        user        = request.POST.get("username")
+        user          = request.POST.get("email")
+        password      = request.POST.get("password")
         reciver_name  = request.POST.get("reciver_name")
-        password    = request.POST.get("password")
-        message     = request.POST.get("message")
-        account     = Account.objects.get(passwd = password, username = user)
-        reciver     = Account.objects.get(username = reciver_name)
+        message       = request.POST.get("message")
+        account       = Account.objects.get(passwd = password, email = user)
+        reciver       = Account.objects.get(username = reciver_name)
 
         conversation = reciver.confirm_contact(account)
 
         if conversation is not None:
             response['found'] = True
-            m = Message(conversation_fk = conversation, content_of_message = message)
+            m = Message(conversation_fk = conversation, content_of_msg = message, sender_fk = account)
             m.save()
-            conversation.add_message_to_conversation(m)
+          #  conversation.add_message_to_conversation(m)
         else:
             response['found'] = False
 

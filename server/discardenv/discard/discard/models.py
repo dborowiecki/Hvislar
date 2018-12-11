@@ -43,6 +43,27 @@ class Account(models.Model):
 class Conversation(models.Model):
     conversation_pk = models.AutoField(primary_key=True)
 
+    def get_messages_from_conversation(self, **kwargs):
+        time_stamp_from    = kwargs['time_from']
+        time_stamp_to      = kwargs['time_to']
+        number_of_messages = kwargs['number_of_messages']
+
+        if time_stamp_from is None:
+            messages = Message.objects.filter(conversation_fk = self)[:number_of_messages]
+            return messages
+
+        if time_stamp_to is not None:
+            messages = Message.objects.filter(
+                conversation_fk=self).filter(
+                send_time__lt = time_stamp_to)[:number_of_messages]
+            return messages
+
+        
+
+        #TODO extend request for time period or sth
+        return False
+
+
     class Meta:
         db_table = '"conversation"'
 

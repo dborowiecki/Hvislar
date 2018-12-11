@@ -174,3 +174,39 @@ def send_message(request):
         response['error'] = str(e)
     
     return JsonResponse(response)
+
+@csrf_exempt
+def get_messages_from_conversation(request):
+    response = {
+        'success': False
+    }
+    try:
+        user          = request.POST.get("email")
+        password      = request.POST.get("password")
+        user2         = request.POST.get("interlocutor")
+        msg_number    = request.POST.get("number_of_messages")
+        msg_from      = None
+        msg_from      = request.POST.get("messages_from_time")
+        msg_to        = None
+        msg_to        = request.POST.get("messages_to_time")
+        account       = Account.objects.get(passwd = password, email = user)
+        interlocutor  = Account.objects.get(username = user2)
+
+        conversation  = interlocutor.confirm_contact(account)
+
+        if conversation is not None:
+            #TODO transform from query set to other
+            response['fetched_messages'] = conversation.get_messages_from_conversation(
+                number_of_messages = int(msg_number), 
+                time_from = msg_from,
+                time_to = msg_to)
+            response['success'] = True
+
+    except Exception as e:
+        print(e)
+        response["error"] = str(e)
+
+    return JsonResponse(response)
+
+
+

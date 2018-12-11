@@ -42,11 +42,6 @@ CREATE TABLE message (
 	send_time 			TIMESTAMP
 );
 
-CREATE TABLE messages_in_conversation (
-	conversation_fk_id INTEGER REFERENCES conversation(conversation_pk),
-	message_fk_id INTEGER REFERENCES message(message_pk)
-);
-
 CREATE TABLE contact_requests (
 	account_fk_id				INTEGER REFERENCES account(account_pk),
 	requesting_account_fk_id 	INTEGER REFERENCES account(account_pk),

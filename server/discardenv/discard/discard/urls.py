@@ -15,13 +15,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from .app_scripts import *
+from .scripts.LoginRegister import *
+from .scripts.ContactManager import *
+from .scripts.MessageManager import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('register/', register),
     path('login/', login),
-    path('message/', test_message),
     path('requestContact/', request_contact),
     path('answerContactRequest/', request_contact_response),
     path('sendMessage/', send_message),

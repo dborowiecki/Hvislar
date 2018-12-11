@@ -195,11 +195,14 @@ def get_messages_from_conversation(request):
         conversation  = interlocutor.confirm_contact(account)
 
         if conversation is not None:
-            #TODO transform from query set to other
-            response['fetched_messages'] = conversation.get_messages_from_conversation(
+            #TODO transform to get other than only message number
+            response['fetched_messages'] = list(
+                conversation.get_messages_from_conversation(
                 number_of_messages = int(msg_number), 
                 time_from = msg_from,
                 time_to = msg_to)
+                .values('content_of_msg', 'sender_fk', 'send_time'))
+            #response['fetched_messages'] = [[x.content_of_msg, x.send for x = []]
             response['success'] = True
 
     except Exception as e:

@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, get_user_model
 from django.http import JsonResponse
 from datetime import datetime
 from django.views.decorators.csrf import csrf_exempt
-from .models import Account
+from ..models import Account, ContactRequest, Conversation, Contact, ContactList, Message
 import json
 
 @csrf_exempt
@@ -16,20 +16,20 @@ def register(request):
         data = request.POST
         
         account = Account(
-            username = request.POST.get("name"),
+            username = request.POST.get("username"),
             passwd   = request.POST.get("password"),
             email    = request.POST.get("email"))
 
         account.save()
-        if Account.objects.get(username= request.POST.get("name")) is not None:
+        if Account.objects.get(username= request.POST.get("username")) is not None:
             response['username'] = account.username
             response['email'] = account.email
             response['success'] = True
 
-        return JsonResponse(response)
-
     except Exception as e:
-        #response['error'] = e
+        print(e)
+        response['error'] = str(e)
+    finally:
         return JsonResponse(response)
 
 @csrf_exempt
@@ -38,7 +38,7 @@ def login(request):
             'success': False
         }
     try:
-        data = request.POST
+        data     = request.POST
         passwd   = request.POST.get("password")
         email    = request.POST.get("email")
         print(email)
@@ -51,30 +51,8 @@ def login(request):
             response['email'] = account.email
             response['success'] = True
 
-        return JsonResponse(response)
-
     except Exception as e:
         print(e)
-        return JsonResponse(response)
-
-@csrf_exempt
-def test_message(request):
-    response = {
-            'success': False
-        }
-    try:
-        data     = request.POST
-        user     = request.POST.get("username")
-        password = request.POST.get("password")
-        message  = request.POST.get("message")
-        account  = Account.objects.get(passwd = passwd, username = user)
-
-        if account is not None:
-            print("User %s sended message: %s" % (name, message))
-            response['success'] = True
-
-        return JsonResponse(response)
-
-    except Exception as e:
-        print(e)
+        response['error'] = str(e)
+    finally:
         return JsonResponse(response)

@@ -20,13 +20,16 @@ def send_message(request):
         message       = request.POST.get("message")
         account       = Account.objects.get(passwd = password, email = user)
         reciver       = Account.objects.get(username = reciver_name)
-
-        conversation = reciver.confirm_contact(account)
+        contact = reciver.get_contact(account)
+        conversation = contact.conversation_fk
 
         if conversation is not None:
             response['found'] = True
             m = Message(conversation_fk = conversation, content_of_msg = message, sender_fk = account)
             m.save()
+            contact.status = True
+            contact.save()
+            response['success'] = True
           #  conversation.add_message_to_conversation(m)
         else:
             response['found'] = False

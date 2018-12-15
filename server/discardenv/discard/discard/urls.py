@@ -22,7 +22,7 @@ from .scripts.MessageManager import *
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('register/', register),
-    path('login/', login),
+    path('login/', logon),
     path('requestContact/', request_contact),
     path('answerContactRequest/', request_contact_response),
     path('sendMessage/', send_message),

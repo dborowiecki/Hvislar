@@ -26,11 +26,11 @@ class Account(models.Model):
         finally:
             return success
 
-    def confirm_contact(self, account):
+    def get_contact(self, account):
         user_contcts = [f.contact_fk for f in ContactList.objects.filter(account_fk=self).all()]
         for contact in user_contcts:
             if account == contact.account_fk:
-                return contact.conversation_fk
+                return contact
 
         return None
 
@@ -43,26 +43,40 @@ class Account(models.Model):
 class Conversation(models.Model):
     conversation_pk = models.AutoField(primary_key=True)
 
+    '''
+    timestamp_from is later date than timestamp_to
+    '''
     def get_messages_from_conversation(self, **kwargs):
         time_stamp_from    = kwargs['time_from']
         time_stamp_to      = kwargs['time_to']
         number_of_messages = kwargs['number_of_messages']
 
-        if time_stamp_from is None:
-            messages = Message.objects.filter(conversation_fk = self)[:number_of_messages]
-            return messages
+        messages = Message.objects.filter(conversation_fk=self)
 
-        if time_stamp_to is not None:
-            messages = Message.objects.filter(
-                conversation_fk=self).filter(
-                send_time__lt = time_stamp_to)[:number_of_messages]
-            return messages
+        if messages is None:
+            return None
+        '''TODO: timestamp method requires tests'''
+        if number_of_messages is None:
+            if time_stamp_from or time_stamp_to is None:
+                raise ValueError('You should define number of messages or both timestamps')
+            else:
+                messages = messages.filter(
+                    send_time__gt = time_stamp_to).filter(
+                    send_time__lt = time_stamp_from)
+                return messages
 
-        
+        elif time_stamp_from is not None:
+            messages = messages.filter(send_time__lt = time_stamp_from)
 
+            if time_stamp_to is not None:
+                if time_stamp_from < time_stamp_to:
+                    raise ValueError('time_from should be later than time_to')
+                messages =messages.filter(send_time__gt = time_stamp_to)
+
+
+        messages = messages[:number_of_messages]
+        return messages
         #TODO extend request for time period or sth
-        return False
-
 
     class Meta:
         db_table = '"conversation"'

@@ -32,8 +32,9 @@ def register(request):
     finally:
         return JsonResponse(response)
 
+
 @csrf_exempt
-def login(request):
+def logon(request):
     response = {
             'success': False
         }

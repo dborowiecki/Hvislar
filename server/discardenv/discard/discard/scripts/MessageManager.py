@@ -13,6 +13,7 @@ def send_message(request):
     response = {
             'success': False
         }
+
     try:
         user          = request.POST.get("email")
         password      = request.POST.get("password")
@@ -20,6 +21,7 @@ def send_message(request):
         message       = request.POST.get("message")
         account       = Account.objects.get(passwd = password, email = user)
         reciver       = Account.objects.get(username = reciver_name)
+
         contact = reciver.get_contact(account)
         conversation = contact.conversation_fk
 
@@ -61,7 +63,8 @@ def get_messages_from_conversation(request):
         account       = Account.objects.get(passwd = password, email = user)
         interlocutor  = Account.objects.get(username = user2)
 
-        conversation  = interlocutor.confirm_contact(account)
+        contact = interlocutor.get_contact(account)
+        conversation = contact.conversation_fk
 
         if conversation is not None:
             #TODO transform to get other than only message number
@@ -73,6 +76,7 @@ def get_messages_from_conversation(request):
                 .values('content_of_msg', 'sender_fk', 'send_time'))
             #response['fetched_messages'] = [[x.content_of_msg, x.send for x = []]
             response['success'] = True
+            account.get_contact(interlocutor).status = False
 
     except Exception as e:
         print(e)

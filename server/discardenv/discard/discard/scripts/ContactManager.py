@@ -65,3 +65,24 @@ def request_contact_response(request):
         response['error'] = str(e)
     finally:
         return JsonResponse(response)
+
+@csrf_exempt
+def add_user_description(request):
+    response = {
+            'success': False
+    }
+    try:
+        passwd               = request.POST.get("password")
+        email                = request.POST.get("email")
+        description          = request.POST.get("description")
+        user                 = Account.objects.get(passwd = passwd, email = email)
+
+        if user is not None:
+            if user.add_description(description):
+                response['success'] = True
+    except Exception as e:
+        print(e)
+        response['error'] = str(e)
+    finally:
+        return JsonResponse(response) 
+

@@ -8,7 +8,7 @@ CREATE TABLE account (
 );
 
 CREATE TABLE account_about (
-	account_about_pk	INTEGER REFERENCES account(account_pk) NOT NULL,
+	account_about_pk_id	INTEGER REFERENCES account(account_pk) NOT NULL,
 	description			TEXT
 );
 

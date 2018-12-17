@@ -34,6 +34,20 @@ class Account(models.Model):
 
         return None
 
+    '''
+    May need try catch and error check
+    '''
+
+    def add_description(self, description):
+        try:
+            user_about = AccountAbout.objects.get(account_about_pk = self.account_pk)
+        except AccountAbout.DoesNotExist:
+            user_about = AccountAbout(account_about_pk = self)
+
+        user_about.description = description
+        user_about.save()
+        return True
+
     class Meta:
         db_table = '"account"'
         

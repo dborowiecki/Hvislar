@@ -26,5 +26,6 @@ urlpatterns = [
     path('requestContact/', request_contact),
     path('answerContactRequest/', request_contact_response),
     path('sendMessage/', send_message),
-    path('getMessages/', get_messages_from_conversation)
+    path('getMessages/', get_messages_from_conversation),
+    path('addDescription/', add_user_description)
 ]

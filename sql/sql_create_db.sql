@@ -7,6 +7,11 @@ CREATE TABLE account (
 	last_time_logged 	TIMESTAMP default CURRENT_DATE
 );
 
+CREATE TABLE account_about (
+	account_about_pk	INTEGER REFERENCES account(account_pk) NOT NULL,
+	description			TEXT
+);
+
 CREATE TABLE conversation (
 	conversation_pk 	SERIAL UNIQUE
 );

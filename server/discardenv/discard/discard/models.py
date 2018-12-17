@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 
 class Account(models.Model):
-    account_pk    = models.AutoField(primary_key=True)
+    account_pk       = models.AutoField(primary_key=True)
     username         = models.CharField(unique = True, max_length=40)
     passwd           = models.CharField(max_length=255)
     email            = models.CharField(unique=True, max_length=50)
@@ -34,11 +34,16 @@ class Account(models.Model):
 
         return None
 
-
-
     class Meta:
         db_table = '"account"'
         
+
+class AccountAbout(models.Model):
+    account_about_pk       = models.ForeignKey(Account, on_delete=models.CASCADE, primary_key=True)
+    description            = models.TextField()
+
+    class Meta:
+        db_table = '"account_about"'
 
 class Conversation(models.Model):
     conversation_pk = models.AutoField(primary_key=True)

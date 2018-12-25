@@ -41,6 +41,11 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void goAsyncChat(View view){
+        Intent intent = new Intent(LoginActivity.this, AsyncChatActActivity.class);
+        startActivity(intent);
+    }
+
     private void loginUser(){
         final EditText eEmail    = (EditText) findViewById(R.id.tEmail);
         final EditText ePassword = (EditText) findViewById(R.id.tPassword);

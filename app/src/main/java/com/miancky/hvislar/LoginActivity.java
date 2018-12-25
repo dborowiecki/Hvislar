@@ -44,13 +44,13 @@ public class LoginActivity extends AppCompatActivity {
     private void loginUser(){
         final EditText eEmail    = (EditText) findViewById(R.id.tEmail);
         final EditText ePassword = (EditText) findViewById(R.id.tPassword);
-        final String password    =  eEmail.getText().toString().trim();
-        final String email       =  ePassword.getText().toString().trim();
+        final String password    =  ePassword.getText().toString().trim();
+        final String email       =  eEmail.getText().toString().trim();
 
         //URL IN ASSETS FILE CALLED CONFIG
         //TODO: Create private asset config file (with JSON object?) and class to get data from it
         try {
-            final String LOGIN_URL = getString(R.string.ip)+"login/";
+            final String LOGIN_URL = "http://"+getString(R.string.ip)+":8000/login/";
 
             StringRequest stringRequest = new StringRequest(Request.Method.POST, LOGIN_URL,
                     new Response.Listener<String>() {

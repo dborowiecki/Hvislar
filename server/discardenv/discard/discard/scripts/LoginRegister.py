@@ -20,6 +20,7 @@ def register(request):
             passwd   = request.POST.get("password"),
             email    = request.POST.get("email"))
 
+        print("X"+request.POST.get("email"))
         account.save()
         if Account.objects.get(username= request.POST.get("username")) is not None:
             response['username'] = account.username

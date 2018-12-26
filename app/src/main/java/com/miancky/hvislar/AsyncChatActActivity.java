@@ -8,6 +8,8 @@ import android.widget.TextView;
 
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -46,7 +48,15 @@ public class AsyncChatActActivity extends AppCompatActivity {
             public void onOpen(ServerHandshake serverHandshake) {
                 Log.i("Websocket", "Opened");
                 //TODO: wrap in json objct that will fit text_data_json['message']
-                mWebSocketClient.send("Hello from " + Build.MANUFACTURER + " " + Build.MODEL);
+                String message = "Hello from " + Build.MANUFACTURER + " " + Build.MODEL;
+                JSONObject arr = new JSONObject();
+                try {
+                    arr.put("message", message);
+                }
+                catch (Exception e){
+                    Log.i("JSONObject", e.getMessage());
+                }
+                mWebSocketClient.send(arr.toString());
             }
 
             @Override

@@ -11,6 +11,7 @@ import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 
 public class AsyncChatActActivity extends AppCompatActivity {
     WebSocketClient mWebSocketClient;
@@ -29,10 +30,13 @@ public class AsyncChatActActivity extends AppCompatActivity {
 
     private void connectWebSocket() {
         URI uri;
+        URL url;
         try {
             //TODO: change for django server chat
-            uri = new URI("ws://websockethost:8080");
-        } catch (URISyntaxException e) {
+            //TODO: Fetching ip from R.string.id dont work, needed fix
+            uri = new URI("ws://192.168.1.101:8000/ws/chat/lobby/");
+           // url = new URL("ws://"+R.string.ip+":8000/chat/lobby/");
+        } catch (Exception e) {
             e.printStackTrace();
             return;
         }
@@ -41,6 +45,7 @@ public class AsyncChatActActivity extends AppCompatActivity {
             @Override
             public void onOpen(ServerHandshake serverHandshake) {
                 Log.i("Websocket", "Opened");
+                //TODO: wrap in json objct that will fit text_data_json['message']
                 mWebSocketClient.send("Hello from " + Build.MANUFACTURER + " " + Build.MODEL);
             }
 

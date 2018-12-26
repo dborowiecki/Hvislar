@@ -48,6 +48,7 @@ public class AsyncChatActActivity extends AppCompatActivity {
                 Log.i("Websocket", "Opened");
                 String message = "Hello from " + Build.MANUFACTURER + " " + Build.MODEL;
                 //TODO: Additional messages should be in sended json object
+                //TODO: in final version shouldnt push this message
                 JSONObject arr = new JSONObject();
                 try {
                     arr.put("message", message);

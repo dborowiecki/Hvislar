@@ -1,5 +1,5 @@
 from django.db import close_old_connections
-
+from .models import Account
 class QueryAuthMiddleware:
     """
     Custom middleware (insecure) that takes user IDs from the query string.
@@ -11,14 +11,34 @@ class QueryAuthMiddleware:
 #TODO: SPRAWDZAĆ UŻYTKOWNIKA W BAZIE
     def __call__(self, scope):
         headers = dict(scope['headers'])
-        if b'login' in headers:
+        if b'auth' in headers:
+            print("LOGIN HEADER FOUND, FINALLY!")
+            print(b'auth' in headers)
             try:
-                name, password = headers[b'authorization'].decode().split()
-                if token_name == 'Token':
-                    token = Token.objects.get(key=token_key)
-                    scope['user'] = token.user
-            except Token.DoesNotExist:
-                scope['user'] = AnonymousUser()
+                login, password = headers[b'auth'].decode().split(',')
+                print(login + ' ' + password)
+                account = Account.objects.using('psql_db').get(passwd = password, username = login)
+                #TODO: Should check if user is in this particular mass conversation
+            except Exception as e:
+                print(e)
+            finally:
+                if account is not None:
+                    scope['account'] = account
+                else:
+                    #TODO Routing should return auth failure in final version
+                    scope['account'] = None
+                return self.inner(scope)
+
+            # try:
+            #     name, password = headers[b'authorization'].decode().split()
+            #     if token_name == 'Token':
+            #         token = Token.objects.get(key=token_key)
+            #         scope['user'] = token.user
+            # except Token.DoesNotExist:
+            #     scope['user'] = AnonymousUser()
+        else:
+            print("no header for you")
+            scope['account'] = None
         return self.inner(scope)
 
         # account = Account.objects.get(passwd = scope['passwd'], email = scope['email'])

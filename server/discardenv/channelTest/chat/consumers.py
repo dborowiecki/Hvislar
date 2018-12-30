@@ -16,6 +16,15 @@ class ChatConsumer(WebsocketConsumer):
         )
 
         self.accept()
+        greeting = 'Hello, '
+        user = self.scope['account']
+        if user  is not None:
+            greeting = greeting + user.username
+        else:
+            greeting = greeting + 'stranger'
+        self.send(text_data=json.dumps({
+            'message': greeting
+        }))
 
     def disconnect(self, close_code):
         # Leave room group

@@ -38,8 +38,8 @@ public class AsyncChatActActivity extends AppCompatActivity {
         URI uri;
         Map<String,String> httpHeaders = new HashMap<String, String>();
         //TODO: Should take login and password from intent
-        httpHeaders.put( "login", "test1" );
-        httpHeaders.put( "haslo", "test1" );
+        //AUTHENTICATION STRING BUILD AS String 'login,email'
+        httpHeaders.put( "auth", "dobryKolega,123qwe" );
         try {
             //TODO: Fetching ip from R.string.id dont work, needed fix
             uri = new URI("ws://192.168.1.101:8000/ws/chat/lobby/");

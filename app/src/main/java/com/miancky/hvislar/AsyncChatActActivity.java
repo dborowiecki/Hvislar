@@ -16,6 +16,8 @@ import org.json.JSONObject;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AsyncChatActActivity extends AppCompatActivity {
     WebSocketClient mWebSocketClient;
@@ -34,24 +36,36 @@ public class AsyncChatActActivity extends AppCompatActivity {
 
     private void connectWebSocket() {
         URI uri;
+        Map<String,String> httpHeaders = new HashMap<String, String>();
+        //TODO: Should take login and password from intent
+        httpHeaders.put( "login", "test1" );
+        httpHeaders.put( "haslo", "test1" );
         try {
             //TODO: Fetching ip from R.string.id dont work, needed fix
             uri = new URI("ws://192.168.1.101:8000/ws/chat/lobby/");
+
         } catch (Exception e) {
             e.printStackTrace();
             return;
         }
+        /* W httpHeader powinien być token uwierzytelniający zamiast loginu i hasła
+        *
+         */
+        mWebSocketClient = new WebSocketClient(uri, httpHeaders) {
 
-        mWebSocketClient = new WebSocketClient(uri) {
             @Override
             public void onOpen(ServerHandshake serverHandshake) {
+
                 Log.i("Websocket", "Opened");
                 String message = "Hello from " + Build.MANUFACTURER + " " + Build.MODEL;
+                mWebSocketClient.setAttachment("pomocy");
+
                 //TODO: Additional messages should be in sended json object
                 //TODO: in final version shouldnt push this message
                 JSONObject arr = new JSONObject();
                 try {
                     arr.put("message", message);
+                    arr.put("login", "test1");
                 }
                 catch (Exception e){
                     Log.i("JSONObject", e.getMessage());
@@ -89,6 +103,7 @@ public class AsyncChatActActivity extends AppCompatActivity {
             public void onError(Exception e) {
                 Log.i("Websocket", "Error " + e.getMessage());
             }
+
         };
         mWebSocketClient.connect();
     }

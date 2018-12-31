@@ -50,4 +50,14 @@ class Account(models.Model):
 
     class Meta:
         db_table = '"account"'
+
+
+
+class MassConversation(models.Model):
+    conversation_pk     = model.AutoField(primary_key=True)
+    room_name           = models.CharField(unique = True, max_length=255)
+    finished            = models.BooleanField(initial=False)
+
+    class Meta:
+        db_table = '"mass_conversation"'
         

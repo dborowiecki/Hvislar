@@ -1,5 +1,5 @@
 from django.db import close_old_connections
-from .models import Account
+from .models import Account, MassConversation
 class QueryAuthMiddleware:
     """
     Custom middleware (insecure) that takes user IDs from the query string.
@@ -14,10 +14,13 @@ class QueryAuthMiddleware:
         if b'auth' in headers:
             print("LOGIN HEADER FOUND, FINALLY!")
             print(b'auth' in headers)
+
+
             try:
                 login, password = headers[b'auth'].decode().split(',')
                 print(login + ' ' + password)
                 account = Account.objects.using('psql_db').get(passwd = password, username = login)
+                scope['conversation_auth'] = self.find_conversation(scope, account)
                 #TODO: Should check if user is in this particular mass conversation
             except Exception as e:
                 print(e)
@@ -41,10 +44,19 @@ class QueryAuthMiddleware:
             scope['account'] = None
         return self.inner(scope)
 
-        # account = Account.objects.get(passwd = scope['passwd'], email = scope['email'])
-        # # Look up user from query string (you should also do things like
-        # # check it's a valid user ID, or if scope["user"] is already populated)
-        # user = User.objects.get(id=int(scope["query_string"]))
-        # close_old_connections()
-        # # Return the inner application directly and let it run everything else
-        # return self.inner(dict(scope, user=user))
+
+    def find_conversation(self, scope, account):
+        try:
+            auth_user = False
+            room = 'lobby'#scope['url_route']['kwargs']['room_name']
+            user = account
+            conversation = MassConversation.objects.using('psql_db').get(room_name = room)
+            auth_user = conversation.auth_user(user)
+            if auth_user:
+                print("User is authenticated")
+            else:
+                print("User is not part of conversation")
+        except Exception as e:
+            print(e)
+        finally:
+            return auth_user

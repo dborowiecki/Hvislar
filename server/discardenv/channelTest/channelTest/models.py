@@ -54,10 +54,25 @@ class Account(models.Model):
 
 
 class MassConversation(models.Model):
-    conversation_pk     = model.AutoField(primary_key=True)
+    conversation_pk     = models.AutoField(primary_key=True)
     room_name           = models.CharField(unique = True, max_length=255)
-    finished            = models.BooleanField(initial=False)
+    finished            = models.BooleanField(default=False)
 
+    def auth_user(self, account):
+        x = AccountInMassConversation.objects.using('psql_db').get(conversation_fk = self, user_fk = account)
+        if x is not None:
+            return True
+        else:
+            return False
+            
     class Meta:
         db_table = '"mass_conversation"'
         
+
+class AccountInMassConversation(models.Model):
+    conversation_fk   = models.ForeignKey(MassConversation, on_delete=models.CASCADE, primary_key=True)
+    user_fk           = models.ForeignKey(Account, on_delete=models.CASCADE)
+
+    class Meta:
+        db_table = '"accounts_in_mass_conversation"'
+        unique_together = ('conversation_fk', 'user_fk')

@@ -4,9 +4,11 @@ from channels.generic.websocket import WebsocketConsumer
 import json
 
 class ChatConsumer(WebsocketConsumer):
+
     def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
-        print(self.scope['headers'])
+        #TODO: method find_conversation should find out if user is in group conversation and 
+        #connect him if he is in one, else should disconnect from conversation
         self.room_group_name = 'chat_%s' % self.room_name
 
         # Join room group
@@ -18,6 +20,7 @@ class ChatConsumer(WebsocketConsumer):
         self.accept()
         greeting = 'Hello, '
         user = self.scope['account']
+        conversation_auth = self.scope['conversation_auth']
         if user  is not None:
             greeting = greeting + user.username
         else:

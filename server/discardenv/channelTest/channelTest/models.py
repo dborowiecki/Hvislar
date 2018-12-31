@@ -58,12 +58,14 @@ class MassConversation(models.Model):
     room_name           = models.CharField(unique = True, max_length=255)
     finished            = models.BooleanField(default=False)
 
+
     def auth_user(self, account):
         x = AccountInMassConversation.objects.using('psql_db').get(conversation_fk = self, user_fk = account)
         if x is not None:
             return True
         else:
             return False
+
 
     def add_account_to_conversation(self, account):
         added = AccountInMassConversation(
@@ -76,6 +78,15 @@ class MassConversation(models.Model):
         else:
             return False
 
+
+    def remove_account_from_conversation(self, account):
+        x = AccountInMassConversation.objects.using('psql_db').get(conversation_fk = self, user_fk = account)
+        if x is None:
+            raise Exception('User {} cannot be found in conversation'.format(account.username))
+        x.user_removed = True
+        x.save()
+
+
     def create_new_conversation(self, name):
         new_conversation = MassConversation(room_name = name)
         new_conversation.save()
@@ -84,7 +95,7 @@ class MassConversation(models.Model):
             return True
         else:
             return False
-            
+
 
     class Meta:
         db_table = '"mass_conversation"'
@@ -93,6 +104,7 @@ class MassConversation(models.Model):
 class AccountInMassConversation(models.Model):
     conversation_fk   = models.ForeignKey(MassConversation, on_delete=models.CASCADE, primary_key=True)
     user_fk           = models.ForeignKey(Account, on_delete=models.CASCADE)
+    user_removed      = models.BooleanField(default=False)
 
     class Meta:
         db_table = '"accounts_in_mass_conversation"'

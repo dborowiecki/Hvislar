@@ -31,14 +31,7 @@ class QueryAuthMiddleware:
                     #TODO Routing should return auth failure in final version
                     scope['account'] = None
                 return self.inner(scope)
-
-            # try:
-            #     name, password = headers[b'authorization'].decode().split()
-            #     if token_name == 'Token':
-            #         token = Token.objects.get(key=token_key)
-            #         scope['user'] = token.user
-            # except Token.DoesNotExist:
-            #     scope['user'] = AnonymousUser()
+                
         else:
             print("no header for you")
             scope['account'] = None

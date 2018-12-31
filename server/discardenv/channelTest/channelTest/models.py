@@ -64,7 +64,28 @@ class MassConversation(models.Model):
             return True
         else:
             return False
+
+    def add_account_to_conversation(self, account):
+        added = AccountInMassConversation(
+            conversation_fk = self,
+            user_fk = account)
+        added.save()
+        check = AccountInMassConversation.objects.using('psql_db').get(conversation_fk = self, user_fk = account_about_pk)
+        if check is not None:
+            return True
+        else:
+            return False
+
+    def create_new_conversation(self, name):
+        new_conversation = MassConversation(room_name = name)
+        new_conversation.save()
+        check = MassConversation.objects.using('psql_db').get(room_name = name)
+        if check is not None:
+            return True
+        else:
+            return False
             
+
     class Meta:
         db_table = '"mass_conversation"'
         

@@ -48,6 +48,15 @@ class Account(models.Model):
         user_about.save()
         return True
 
+    def get_description(self):
+        try:
+            user_about = AccountAbout.objects.get(account_about_pk = self.account_pk)
+            return user_about.description
+        except AccountAbout.DoesNotExist:
+            raise ValueError('No description')
+        
+        return False
+
     class Meta:
         db_table = '"account"'
         

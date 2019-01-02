@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, get_user_model
 from django.http import JsonResponse
 from datetime import datetime
 from django.views.decorators.csrf import csrf_exempt
-from ..models import Account, ContactRequest, Conversation, Contact, ContactList, Message
+from ..models import Account, AccountAbout, ContactRequest, Conversation, Contact, ContactList, Message
 import json
 
 
@@ -83,6 +83,7 @@ def get_messages_from_conversation(request):
         response["error"] = str(e)
 
     return JsonResponse(response)
+
 
 
 

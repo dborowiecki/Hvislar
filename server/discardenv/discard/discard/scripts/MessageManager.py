@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, get_user_model
 from django.http import JsonResponse
 from datetime import datetime
 from django.views.decorators.csrf import csrf_exempt
-from ..models import Account, AccountAbout, ContactRequest, Conversation, Contact, ContactList, Message
+from ..modelsT.Account import Account
 import json
 
 

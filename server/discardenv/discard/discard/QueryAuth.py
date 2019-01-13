@@ -1,5 +1,5 @@
 from django.db import close_old_connections
-from .models import Account, MassConversation
+from .modelsT import Account, MassConversation
 class QueryAuthMiddleware:
     """
     Custom middleware (insecure) that takes user IDs from the query string.

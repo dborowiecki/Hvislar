@@ -7,8 +7,59 @@ from django.views.decorators.csrf import csrf_exempt
 from ..modelsT.Account import Account
 import json
 
+"""
+This method contains method responsible for handling requests connected with user contacs and 
+with user profile (in current application state: adding and reciviing description)
+
+Methods
+-------
+request_contact : HttpRespose
+    Sending contact request to another user.
+
+    Response should be POST type and contain:
+        password, email, contact_name, message
+
+request_contact_response : HttpResponse
+    Answering another user contact request.
+
+    Response should be POST type and contain:
+        password, email, resposed_user, response
+
+add_user_description : HttpResponse
+    Adding user description
+
+    Response should be POST type and contain:
+        password, email, description
+
+get_user_description : HttpResponse 
+    Reciving user description
+
+    Response should be POST type and contain:
+        password, email
+
+"""
+
 @csrf_exempt
 def request_contact(request):
+    """
+        Method which after call creates new ContactRequest from one user to another. 
+
+        Parameters
+        --------
+        request : HttpResponse
+            HttpResponse of POST type, need to have key-values:
+            'password' and 'email' of requesting user, needed for validation
+            'contact_name' - username of account reciving contact request
+            'message' -  message which comes with contct request  
+
+        Returns
+        --------
+        JsonRespose
+            With 'success' boolean if request was sended correctly
+            If any error occured durning transaction returns also
+            'error' with error message.
+
+    """
     response = {
             'success': False
         }
@@ -37,6 +88,25 @@ def request_contact(request):
 
 @csrf_exempt
 def request_contact_response(request):
+    """
+        Calling this method by user accepts or refuse contct with another account
+
+        Parameters
+        --------
+        request : HttpResponse
+            HttpResponse of POST type, need to have key-values:
+            'password' and 'email' of user who answers request
+            'responsed_user' - username of user which request is answered
+            'response' - if equals "Accept" new contact is created, else 
+                new contact between users isn't created 
+        Returns
+        --------
+        JsonRespose
+            With 'success' boolean if request responsed correctly.
+            If any error occured durning transaction returns also
+            'error' with error message.
+
+    """
     response = {
             'success': False
     }
@@ -68,6 +138,24 @@ def request_contact_response(request):
 
 @csrf_exempt
 def add_user_description(request):
+     """
+        Method that create add description for account
+
+        Parameters
+        --------
+        request : HttpResponse
+            HttpResponse of POST type, need to have key-values:
+            'password' and 'email' of user who answers request
+            'description' - description that user want to add to his account
+
+        Returns
+        --------
+        JsonRespose
+            With 'success' boolean if addition was successful.
+            If any error occured durning transaction returns also
+            'error' with error message.
+
+    """
     response = {
             'success': False
     }
@@ -88,14 +176,31 @@ def add_user_description(request):
 
 @csrf_exempt
 def get_user_description(request):
+    """
+        Method that recives user description
+
+        Parameters
+        --------
+        request : HttpResponse
+            HttpResponse of POST type, need to have key-values:
+            'username' - username whose description is requested
+
+        Returns
+        --------
+        JsonRespose
+            'success' boolean if addition was successful.
+            'description' string with description.
+            If any error occured durning transaction returns also
+            'error' with error message.
+
+    """
     response = {
         'success': False
     }
     try:
-        user          = request.POST.get("email")
-        password      = request.POST.get("password")
+        user          = request.POST.get("username")
 
-        account       = Account.objects.get(passwd = password, email = user)
+        account       = Account.objects.get(username = password)
 
         if account is not None:
             response['description'] = account.get_description()

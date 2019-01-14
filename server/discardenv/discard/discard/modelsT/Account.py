@@ -4,6 +4,24 @@ from django.contrib.auth.models import User
 from . import *
 
 class Account(models.Model):
+    """
+    A class used as user account model
+
+    Methods
+    -------
+    add_friend : Account, Conversation
+        Add account to contact list
+
+    get_contact : Account
+        Returns contact with another account
+
+    add_description : str
+        Adding description for user account
+
+    get_description : 
+        Returns account description
+
+    """
     account_pk       = models.AutoField(primary_key=True)
     username         = models.CharField(unique = True, max_length=40)
     passwd           = models.CharField(max_length=255)
@@ -12,6 +30,25 @@ class Account(models.Model):
     last_time_logged = models.DateTimeField(auto_now_add=True)
 
     def add_friend(self, friend, c):
+        """
+        Adding another account to account friend list.
+
+        Parameters
+        --------
+        friend : Account
+            Account of friend which is going to be added as friend
+
+        c : Conversation
+            Reference to conversation between accounts
+
+        Returns
+        --------
+        boolean
+            True if adding friend was sucessfull 
+            False if failed
+
+
+        """
         success = False
         try:
             contact = Contact(account_fk =  friend, conversation_fk = c)
@@ -27,6 +64,20 @@ class Account(models.Model):
             return success
 
     def get_contact(self, account):
+        """
+        Method contact with another user
+
+        Parameters
+        ----------
+        account: Account
+            Another account whose contact we want to recive
+
+        Returns
+        -------
+        Contact
+            contact with another user if found
+            None if contact with another account was not found
+        """
         user_contcts = [f.contact_fk for f in ContactList.objects.filter(account_fk=self).all()]
         for contact in user_contcts:
             if account == contact.account_fk:
@@ -39,6 +90,20 @@ class Account(models.Model):
     '''
 
     def add_description(self, description):
+        """
+        Method that adds description for account
+
+        Parameters
+        ----------
+        description: str
+            Description that we want add to account
+
+        Returns
+        -------
+        boolean
+            True if addition was succesfull
+            False if addition failed
+        """
         try:
             user_about = AccountAbout.objects.get(account_about_pk = self.account_pk)
         except AccountAbout.DoesNotExist:
@@ -49,13 +114,21 @@ class Account(models.Model):
         return True
 
     def get_description(self):
+        """
+        Getting account description
+
+        Returns
+        -------
+        str
+            account description 
+        """
         try:
             user_about = AccountAbout.objects.get(account_about_pk = self.account_pk)
             return user_about.description
         except AccountAbout.DoesNotExist:
             raise ValueError('No description')
         
-        return False
+        return None
 
     class Meta:
         db_table = '"account"'

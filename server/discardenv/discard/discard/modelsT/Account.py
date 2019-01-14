@@ -7,6 +7,19 @@ class Account(models.Model):
     """
     A class used as user account model
 
+    Attributes
+    ----------
+    username: str 
+        Username
+    passwd: str
+        User password
+    email: str
+        User email
+    dos: Date
+        Date of account creation
+    last_time_logged: Date
+        When user was last time loged in
+        
     Methods
     -------
     add_friend : Account, Conversation

@@ -4,12 +4,62 @@ from django.contrib.auth.models import User
 from . import *
 
 class Conversation(models.Model):
+    """
+        This class is model for conversation between users
+
+        Attributes
+        ----------
+        converstion_pk: Conversation
+            Conversation priary key 
+
+        Methods
+        -------
+        get_messages_from_conversation: time_from, time_to, number_of_messages
+            Returns messages from conversation
+    
+    """
     conversation_pk = models.AutoField(primary_key=True)
 
     '''
     timestamp_from is later date than timestamp_to
     '''
     def get_messages_from_conversation(self, **kwargs):
+         """
+        Method used for reciving messages from conversation between users.
+        You need to put in **kwargs either number of messages you want to recive
+        (then you recive messages from the newest) or both time stamps, then messages between
+        time_from and time_to will be returned. If number of messages and both timestamps will be 
+        in **kwargs then you recive required number of messages in timestamp period of time counted from 
+        newest.
+
+        Note
+        ----
+        time_from is later date than time_to
+
+        Parameters
+        --------
+        **kwargs
+        time_from: Date
+            The date from which you want to get messages
+
+        time_to: Date
+            Date to which you want to recive informations
+
+        number_of_messages : Conversation
+            Number of messages which you want to recive
+
+        Returns
+        --------
+        list of Message
+            True if adding friend was sucessfull 
+            False if failed
+
+        Raises
+        -------
+        ValueError
+            If there is no number_of_messages or timestamps in params
+            or when time_to is later date than time_from
+        """
         time_stamp_from    = kwargs['time_from']
         time_stamp_to      = kwargs['time_to']
         number_of_messages = kwargs['number_of_messages']

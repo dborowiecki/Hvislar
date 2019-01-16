@@ -18,6 +18,7 @@ class MassConversation(models.Model):
     """ 
     conversation_pk     = models.AutoField(primary_key=True)
     room_name           = models.CharField(unique = True, max_length=255)
+    allow_new_users     = models.BooleanField(default = True)
     finished            = models.BooleanField(default=False)
 
 
@@ -66,6 +67,20 @@ class MassConversation(models.Model):
         else:
             return False
 
+    def add_account_to_last_open_conversation(self, account):
+        try: 
+            last_open_conversation = MassConversation.objects.get(allow_new_users = True)
+        except MultipleObjectsReturned:
+            last_open_conversation = MassConversation.objects.all(allow_new_users = True)[0]
+        finally:
+            is last_open_conversation is not None:
+                last_open_conversation.add_account_to_conversation(account)
+            else:
+               #TODO: Return exception that will make chat consumer to create new conversation
+
+
+
+
 
     def remove_account_from_conversation(self, account):
         """
@@ -110,6 +125,18 @@ class MassConversation(models.Model):
         else:
             return False
 
+
+    def create_new_unique_conversation(self):
+        new_conv_name = generate_random_name_for_conversation()
+
+        while(MassConversation.objects.all(room_name = new_conv_name) is not None):
+            new_conv_name = generate_random_name_for_conversation()
+
+        create_new_conversation(new_conv_name)
+
+    def generate_random_name_for_conversation(self):
+        new_name = get_random_string(length=32)
+        return new_name
 
     class Meta:
         db_table = '"mass_conversation"'

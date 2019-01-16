@@ -19,6 +19,7 @@ CREATE TABLE conversation (
 CREATE TABLE mass_conversation (
 	conversation_pk 	SERIAL UNIQUE,
 	room_name			VARCHAR(255) NOT NULL UNIQUE,
+	allow_new_users		BOOL DEFAULT TRUE,
 	finished			BOOL NOT NULL DEFAULT FALSE
 );
 

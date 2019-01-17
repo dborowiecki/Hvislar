@@ -4,7 +4,7 @@
     package="com.miancky.hvislar">
 
     <uses-permission android:name="android.permission.INTERNET" />
-
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -12,7 +12,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:networkSecurityConfig="@xml/network_security_config"
         tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".MainActivity">
             <intent-filter>
@@ -25,8 +24,7 @@
             android:name=".Things"
             android:label="@string/title_activity_things"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".LoginActivity" />
+        <activity android:name=".LoginActivity" />
         <activity
             android:name=".RegisterActivity"
             android:label="@string/title_activity_register"
@@ -34,7 +32,9 @@
         <activity android:name=".UserProfile" />
         <activity android:name=".ChatActivity" />
         <activity android:name=".ListOfFriendsActivity" />
-        <activity android:name=".AddNewFriendsActivity"></activity>
+        <activity android:name=".AddNewFriendsActivity" />
+        <activity android:name=".AsyncChatActActivity"
+            android:exported="true"/>
     </application>
 
 </manifest>

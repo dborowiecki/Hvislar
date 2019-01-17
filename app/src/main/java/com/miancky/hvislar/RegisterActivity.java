@@ -55,13 +55,14 @@ public class RegisterActivity extends AppCompatActivity {
         final EditText eEmail = findViewById(R.id.tEmail);
         final EditText ePassword = findViewById(R.id.tPassword);
         final String username = eLogin.getText().toString().trim();
-        final String password = eEmail.getText().toString().trim();
-        final String email = ePassword.getText().toString().trim();
+        final String password = ePassword.getText().toString().trim();
+        final String email = eEmail.getText().toString().trim();
 
+        Toast.makeText(RegisterActivity.this,email.toString(),Toast.LENGTH_LONG).show();
         //URL IN ASSETS FILE CALLED CONFIG
         //TODO: Create private asset config file (with JSON object?) and class to get data from it
         try {
-            final String REGISTER_URL = getString(R.string.ip)+"register/";
+            final String REGISTER_URL = "http://"+getString(R.string.ip)+":8000/register/";
 
             StringRequest stringRequest = new StringRequest(Request.Method.POST, REGISTER_URL,
                 new Response.Listener<String>() {
@@ -100,7 +101,7 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             protected Map<String,String> getParams(){
                 Map<String,String> params = new HashMap<>();
-                params.put("name",username);
+                params.put("username",username);
                 params.put("password",password);
                 params.put("email", email);
                 return params;

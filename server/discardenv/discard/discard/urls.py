@@ -18,6 +18,7 @@ from django.urls import path
 from .scripts.LoginRegister import *
 from .scripts.ContactManager import *
 from .scripts.MessageManager import *
+from .scripts.MassConversationManager import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -28,5 +29,6 @@ urlpatterns = [
     path('sendMessage/', send_message),
     path('getMessages/', get_messages_from_conversation),
     path('addDescription/', add_user_description),
-    path('getDescription/', get_user_description)
+    path('getDescription/', get_user_description),
+    path('joinNewMassConversation/', add_user_to_mass_conversation),
 ]

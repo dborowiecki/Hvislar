@@ -7,11 +7,27 @@ class ChatConsumer(WebsocketConsumer):
     def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.room_group_name = 'chat_%s' % self.room_name
+        
+        #In theory creates group only with this user
+        self.user_group = str(self.scope['account'].account_pk)
 
         # Join room group
+
+        #MA WYSYŁAĆ UŻYTKOWNIKOWI CZAS POZOSTAŁY DO ROZPOCZĘCIA:
         async_to_sync(self.channel_layer.group_add)(
-            self.room_group_name,
+            self.user_group,
             self.channel_name
+        )
+        async_to_sync(self.channel_layer.group_send)(
+            self.user_group, 
+            {
+                'type': 'chat_message',
+                'message': "Alooo, ms User"
+            })
+
+        async_to_sync(self.channel_layer.group_add)(
+             self.room_group_name,
+             self.channel_name
         )
 
         self.accept()

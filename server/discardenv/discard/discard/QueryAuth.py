@@ -1,5 +1,5 @@
 from django.db import close_old_connections
-from .modelsT import Account, MassConversation
+import discard.modelsT as model
 class QueryAuthMiddleware:
     """
     Custom middleware (insecure) that takes user IDs from the query string.
@@ -19,7 +19,7 @@ class QueryAuthMiddleware:
             try:
                 login, password = headers[b'auth'].decode().split(',')
                 print(login + ' ' + password)
-                account = Account.objects.get(passwd = password, username = login)
+                account = model.Account.objects.get(passwd = password, username = login)
                 scope['conversation_auth'] = self.find_conversation(scope, account)
                 #TODO: Should check if user is in this particular mass conversation
             except Exception as e:
@@ -43,7 +43,7 @@ class QueryAuthMiddleware:
             auth_user = False
             room = 'lobby'#scope['url_route']['kwargs']['room_name']
             user = account
-            conversation = MassConversation.objects.get(room_name = room)
+            conversation = model.MassConversation.objects.get(room_name = room)
             auth_user = conversation.auth_user(user)
             if auth_user:
                 print("User is authenticated")

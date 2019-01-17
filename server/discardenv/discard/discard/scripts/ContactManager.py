@@ -138,26 +138,26 @@ def request_contact_response(request):
 
 @csrf_exempt
 def add_user_description(request):
-     """
-        Method that create add description for account
-
-        Parameters
-        --------
-        request : HttpResponse
-            HttpResponse of POST type, need to have key-values:
-            'password' and 'email' of user who answers request
-            'description' - description that user want to add to his account
-
-        Returns
-        --------
-        JsonRespose
-            With 'success' boolean if addition was successful.
-            If any error occured durning transaction returns also
-            'error' with error message.
-
     """
+    Method that create add description for account
+
+    Parameters
+    --------
+    request : HttpResponse
+        HttpResponse of POST type, need to have key-values:
+        'password' and 'email' of user who answers request
+        'description' - description that user want to add to his account
+
+    Returns
+    --------
+    JsonRespose
+        With 'success' boolean if addition was successful.
+        If any error occured durning transaction returns also
+        'error' with error message.
+    """
+
     response = {
-            'success': False
+        'success': False
     }
     try:
         passwd               = request.POST.get("password")
@@ -194,7 +194,7 @@ def get_user_description(request):
             'error' with error message.
 
     """
-    response = {
+    response ={
         'success': False
     }
     try:

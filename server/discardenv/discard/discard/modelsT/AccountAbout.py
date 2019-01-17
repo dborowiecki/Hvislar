@@ -1,10 +1,11 @@
 from django.db import models
 from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User
-from . import *
+from .Account import Account
+
 class AccountAbout(models.Model):
 	"""
-    A class used as AccoutAboutModel where user description is stored 
+	A class used as AccoutAboutModel where user description is stored 
 
 	Attributes
 	----------
@@ -15,8 +16,8 @@ class AccountAbout(models.Model):
 		Description content
 	"""
 
-    account_about_pk       = models.ForeignKey(Account, on_delete=models.CASCADE, primary_key=True)
-    description            = models.TextField()
+	account_about_pk       = models.ForeignKey(Account, on_delete=models.CASCADE, primary_key=True)
+	description            = models.TextField()
 
-    class Meta:
-        db_table = '"account_about"'
+	class Meta:
+	    db_table = '"account_about"'

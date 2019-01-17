@@ -1,8 +1,8 @@
 from django.db import models
 from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User
-from . import *
-
+from django.utils.crypto import get_random_string
+from .Account import Account
 class MassConversation(models.Model):
     """
     Class which is a model for mass conversation
@@ -35,13 +35,16 @@ class MassConversation(models.Model):
         boolean
             True if user is participant or False if he isn't
         """
-
         x = AccountInMassConversation.objects.get(conversation_fk = self, user_fk = account)
         if x is not None:
             return True
         else:
             return False
 
+    def get_user_conversations(self, account):
+        x =  AccountInMassConversation.objects.filter(user_fk = account).all()
+        active = [conv.conversation_fk for conv in x if conv.user_removed == False]
+        return active
 
     def add_account_to_conversation(self, account):
         """
@@ -61,26 +64,28 @@ class MassConversation(models.Model):
             conversation_fk = self,
             user_fk = account)
         added.save()
-        check = AccountInMassConversation.objects.get(conversation_fk = self, user_fk = account_about_pk)
+        check = AccountInMassConversation.objects.get(conversation_fk = self, user_fk = account)
         if check is not None:
             return True
         else:
             return False
 
     def add_account_to_last_open_conversation(self, account):
+        last_open_conversation = None
         try: 
-            last_open_conversation = MassConversation.objects.get(allow_new_users = True)
-        except MultipleObjectsReturned:
-            last_open_conversation = MassConversation.objects.all(allow_new_users = True)[0]
+            last_open_conversation = MassConversation.objects.filter(allow_new_users = True).all()[0]
+            print(last_open_conversation.room_name)
+        except Exception as e:
+            print(e)
         finally:
-            is last_open_conversation is not None:
+            if last_open_conversation is not None:
                 last_open_conversation.add_account_to_conversation(account)
             else:
-               #TODO: Return exception that will make chat consumer to create new conversation
-
-
-
-
+                self.create_new_unique_conversation()
+                last_open_conversation = MassConversation.objects.filter(allow_new_users = True).all()[0]
+               #TODO: Fetch this conversation from method to avoid recursion
+                last_open_conversation.add_account_to_conversation(account)
+                return None
 
     def remove_account_from_conversation(self, account):
         """
@@ -127,12 +132,12 @@ class MassConversation(models.Model):
 
 
     def create_new_unique_conversation(self):
-        new_conv_name = generate_random_name_for_conversation()
+        new_conv_name = self.generate_random_name_for_conversation()
 
-        while(MassConversation.objects.all(room_name = new_conv_name) is not None):
-            new_conv_name = generate_random_name_for_conversation()
+        while(len(MassConversation.objects.filter(room_name = new_conv_name).all()) is not 0):
+            new_conv_name = self.generate_random_name_for_conversation()
 
-        create_new_conversation(new_conv_name)
+        self.create_new_conversation(new_conv_name)
 
     def generate_random_name_for_conversation(self):
         new_name = get_random_string(length=32)
@@ -141,3 +146,29 @@ class MassConversation(models.Model):
     class Meta:
         db_table = '"mass_conversation"'
         
+
+class AccountInMassConversation(models.Model):
+    """
+    A model which stores information about account in group conversation.
+
+
+    Attributes
+    -------
+    conversation_fk : MassConversation
+        Reference to conversation of which user is participant
+
+    user_fk : Account
+        Reference to user account which is in conversation
+
+    user_removed : boolean
+        Checks if user is still in conversation
+
+    """
+    conversation_fk   = models.ForeignKey(MassConversation, on_delete=models.CASCADE, primary_key=True)
+    user_fk           = models.ForeignKey(Account, on_delete=models.CASCADE)
+    user_removed      = models.BooleanField(default=False)
+
+    class Meta:
+        db_table = '"accounts_in_mass_conversation"'
+        unique_together = ('conversation_fk', 'user_fk')
+

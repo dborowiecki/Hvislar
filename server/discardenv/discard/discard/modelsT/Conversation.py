@@ -1,8 +1,7 @@
 from django.db import models
 from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User
-from . import *
-
+from .Account import Account
 class Conversation(models.Model):
     """
         This class is model for conversation between users
@@ -16,15 +15,12 @@ class Conversation(models.Model):
         -------
         get_messages_from_conversation: time_from, time_to, number_of_messages
             Returns messages from conversation
-    
+
     """
     conversation_pk = models.AutoField(primary_key=True)
 
-    '''
-    timestamp_from is later date than timestamp_to
-    '''
     def get_messages_from_conversation(self, **kwargs):
-         """
+        """
         Method used for reciving messages from conversation between users.
         You need to put in **kwargs either number of messages you want to recive
         (then you recive messages from the newest) or both time stamps, then messages between
@@ -60,6 +56,7 @@ class Conversation(models.Model):
             If there is no number_of_messages or timestamps in params
             or when time_to is later date than time_from
         """
+
         time_stamp_from    = kwargs['time_from']
         time_stamp_to      = kwargs['time_to']
         number_of_messages = kwargs['number_of_messages']

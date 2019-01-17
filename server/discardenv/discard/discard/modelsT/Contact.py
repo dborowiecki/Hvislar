@@ -1,7 +1,8 @@
 from django.db import models
 from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User
-from . import *
+from .Account import Account
+from .Conversation import Conversation
 class Contact(models.Model):
 	"""
 	Contact model, stores information about account contact with
@@ -23,11 +24,11 @@ class Contact(models.Model):
 		contact with another user
 
 	"""
-    contact_pk      = models.AutoField(primary_key=True)
-    account_fk      = models.ForeignKey(Account, on_delete=models.CASCADE)
-    conversation_fk = models.ForeignKey(Conversation, on_delete=models.CASCADE)
-    contact_name    = models.CharField(max_length=20)
-    status          = models.BooleanField(default=False)
-   
-    class Meta:
-        db_table = '"contact"'
+	contact_pk      = models.AutoField(primary_key=True)
+	account_fk      = models.ForeignKey(Account, on_delete=models.CASCADE)
+	conversation_fk = models.ForeignKey(Conversation, on_delete=models.CASCADE)
+	contact_name    = models.CharField(max_length=20)
+	status          = models.BooleanField(default=False)
+
+	class Meta:
+	    db_table = '"contact"'

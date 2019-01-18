@@ -24,7 +24,7 @@ CREATE TABLE mass_conversation (
 );
 
 CREATE TABLE accounts_in_mass_conversation (
-	conversation_fk_id   INTEGER REFERENCES conversation(conversation_pk) NOT NULL,
+	conversation_fk_id   INTEGER REFERENCES mass_conversation(conversation_pk) NOT NULL,
 	user_fk_id 			 INTEGER REFERENCES account(account_pk) NOT NULL,
 	user_removed		 BOOL NOT NULL DEFAULT FALSE
 );

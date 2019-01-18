@@ -78,8 +78,8 @@ public class AsyncChatActActivity extends AppCompatActivity {
             @Override
             public void onMessage(String s) {
                 try {
-                    final JSONObject recived = new JSONObject(s);
-                    final String message = recived.get("message").toString();
+                    final JSONObject received = new JSONObject(s);
+                    final String message = received.get("message").toString();
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {

@@ -10,4 +10,7 @@
     <string name="ip">10.0.1.93</string>
     <string name="registration_completed">Registration completed successfully</string>
     <string name="registration_failed">Registration failed</string>
+    <string name="my_profile">My Profile</string>
+    <string name="add_friends">Add Friends</string>
+    <string name="temp_chat">Temp chat</string>
 </resources>

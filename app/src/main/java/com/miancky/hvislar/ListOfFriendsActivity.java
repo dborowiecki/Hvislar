@@ -66,6 +66,11 @@ public class ListOfFriendsActivity extends AppCompatActivity {
         Toast.makeText(ListOfFriendsActivity.this, listItems.toString(), Toast.LENGTH_SHORT).show();
     }
 
+    public void goAsyncChat(View view){
+        Intent intent = new Intent(this, AsyncChatActActivity.class);
+        startActivity(intent);
+    }
+
     public void goToUserProfile(View view){
         Intent intent = new Intent(ListOfFriendsActivity.this, UserProfile.class);
         intent.putExtra("name", getIntent().getStringExtra("name"));

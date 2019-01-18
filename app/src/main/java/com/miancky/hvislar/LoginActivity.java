@@ -1,12 +1,8 @@
 package com.miancky.hvislar;
 
 import android.content.Intent;
-import android.content.res.AssetManager;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -21,7 +17,6 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.HashMap;
@@ -47,10 +42,10 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void loginUser(){
-        final EditText eEmail    = (EditText) findViewById(R.id.tEmail);
-        final EditText ePassword = (EditText) findViewById(R.id.tPassword);
-        final String password    =  ePassword.getText().toString().trim();
-        final String email       =  eEmail.getText().toString().trim();
+        final EditText eEmail    = findViewById(R.id.tEmail);
+        final EditText ePassword = findViewById(R.id.tPassword);
+        final String password    = ePassword.getText().toString().trim();
+        final String email       = eEmail.getText().toString().toLowerCase().trim();
 
         //URL IN ASSETS FILE CALLED CONFIG
         //TODO: Create private asset config file (with JSON object?) and class to get data from it
@@ -90,7 +85,7 @@ public class LoginActivity extends AppCompatActivity {
                     }){
                 @Override
                 protected Map<String,String> getParams(){
-                    Map<String,String> params = new HashMap<String, String>();
+                    Map<String,String> params = new HashMap<>();
                     params.put("password",password);
                     params.put("email", email);
                     return params;
@@ -111,7 +106,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     //TODO: refactor, move to another class
-    public String convert(InputStream inputStream, Charset charset) throws IOException {
+    public String convert(InputStream inputStream, Charset charset) {
         Scanner scanner = new Scanner(inputStream, charset.name());
         return scanner.useDelimiter("\\A").next();
     }

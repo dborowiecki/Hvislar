@@ -111,9 +111,9 @@ public class AsyncChatActActivity extends AppCompatActivity {
     public void sendMessage(View view) {
         EditText editText = findViewById(R.id.sendEditText);
         try {
-            JSONObject sendedObject = new JSONObject();
-            sendedObject.put("message", editText.getText());
-            mWebSocketClient.send(sendedObject.toString());
+            JSONObject sentObject = new JSONObject();
+            sentObject.put("message", editText.getText());
+            mWebSocketClient.send(sentObject.toString());
             editText.setText("");
         }
         catch (Exception e){

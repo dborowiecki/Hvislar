@@ -80,7 +80,13 @@ public class AsyncChatActActivity extends AppCompatActivity {
             public void onMessage(String s) {
                 try {
                     final JSONObject recived = new JSONObject(s);
+                    if(recived.has("time")){
+                         //TODO: build timer that will count to battle royal start
+                         //buildTimer()
+                        recived.put("message", recived.get("message").toString()+recived.get("time").toString());
+                    }
                     final String message = recived.get("message").toString();
+
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -93,6 +99,7 @@ public class AsyncChatActActivity extends AppCompatActivity {
                     Log.i("WebsocketMessage", e.getMessage());
                 }
             }
+
 
             @Override
             public void onClose(int i, String s, boolean b) {

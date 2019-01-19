@@ -20,7 +20,8 @@ CREATE TABLE mass_conversation (
 	conversation_pk 	SERIAL UNIQUE,
 	room_name			VARCHAR(255) NOT NULL UNIQUE,
 	allow_new_users		BOOL DEFAULT TRUE,
-	finished			BOOL NOT NULL DEFAULT FALSE
+	finished			BOOL NOT NULL DEFAULT FALSE,
+	creation_cate		DATE not null default CURRENT_DATE,
 );
 
 CREATE TABLE accounts_in_mass_conversation (
@@ -39,7 +40,8 @@ CREATE TABLE contact (
 
 CREATE TABLE contact_list (
 	account_fk_id INTEGER REFERENCES account(account_pk),
-	contact_fk_id INTEGER REFERENCES contact(contact_pk)
+	contact_fk_id INTEGER REFERENCES contact(contact_pk),
+	friend_account_fk_id INTEGER REFERENCES account(account_pk)
 );
 
 CREATE TABLE message (

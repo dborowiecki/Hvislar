@@ -24,6 +24,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('register/', register),
     path('login/', logon),
+    path('getFriendList/', get_user_contacts),
     path('requestContact/', request_contact),
     path('answerContactRequest/', request_contact_response),
     path('sendMessage/', send_message),

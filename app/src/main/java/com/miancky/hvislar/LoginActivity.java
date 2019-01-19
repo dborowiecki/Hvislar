@@ -50,7 +50,7 @@ public class LoginActivity extends AppCompatActivity {
         //URL IN ASSETS FILE CALLED CONFIG
         //TODO: Create private asset config file (with JSON object?) and class to get data from it
         try {
-            final String LOGIN_URL = "http://"+getString(R.string.ip)+":8000/login/";
+            final String LOGIN_URL = "http://"+R.string.ip+":8000/login/";
 
             StringRequest stringRequest = new StringRequest(Request.Method.POST, LOGIN_URL,
                     new Response.Listener<String>() {

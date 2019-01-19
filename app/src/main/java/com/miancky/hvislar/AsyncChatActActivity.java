@@ -36,12 +36,11 @@ public class AsyncChatActActivity extends AppCompatActivity {
         URI uri;
         Map<String,String> httpHeaders = new HashMap<>();
         //TODO: Should take login and password from intent
-        //AUTHENTICATION STRING BUILD AS String 'login,email'
+        //AUTHENTICATION STRING BUILD AS String 'login,password'
         Intent intent = getIntent();
-        httpHeaders.put( "auth", intent.getStringExtra("name")+","+intent.getStringExtra("password") );
+        httpHeaders.put( "auth", "dobryKolega,123qwe" );
         try {
-            //TODO: Fetching ip from R.string.id dont work, needed fix
-            uri = new URI("ws://"+R.string.ip+":8000/ws/chat/lobby/");
+            uri = new URI("ws://10.0.1.93:8000/ws/chat/lobby/");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -59,8 +58,8 @@ public class AsyncChatActActivity extends AppCompatActivity {
                 String message = "Hello from " + Build.MANUFACTURER + " " + Build.MODEL;
                 mWebSocketClient.setAttachment("pomocy");
 
-                //TODO: Additional messages should be in sended json object
-                //TODO: in final version shouldnt push this message
+                //TODO: Additional messages should be in sent json object
+                //TODO: in final version shouldn't push this message
                 JSONObject arr = new JSONObject();
                 try {
                     arr.put("message", message);

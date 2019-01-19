@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
@@ -40,7 +41,8 @@ public class AsyncChatActActivity extends AppCompatActivity {
         Intent intent = getIntent();
         httpHeaders.put( "auth", "dobryKolega,123qwe" );
         try {
-            uri = new URI("ws://+"+R.string.ip+":8000/ws/chat/lobby/");
+            uri = new URI("ws://"+getString(R.string.ip)+":8000/ws/chat/lobby/");
+            Toast.makeText(AsyncChatActActivity.this,uri.toString(),Toast.LENGTH_LONG).show();
 
         } catch (Exception e) {
             e.printStackTrace();

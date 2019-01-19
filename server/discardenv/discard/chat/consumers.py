@@ -53,13 +53,16 @@ class ChatConsumer(WebsocketConsumer):
         message = text_data_json['message']
 
         # Send message to room group
-        async_to_sync(self.channel_layer.group_send)(
-            self.room_group_name,
-            {
-                'type': 'chat_message',
-                'message': message
-            }
-        )
+        if self.started:
+            async_to_sync(self.channel_layer.group_send)(
+                self.room_group_name,
+                {
+                    'type': 'chat_message',
+                    'message': message
+                }
+            )
+        else:
+            self.get_time_before_start()
 
     # Receive message from room group
     def chat_message(self, event):
@@ -80,16 +83,26 @@ class ChatConsumer(WebsocketConsumer):
         }))
 
     def get_time_before_start(self):
-        conv = self.scope['conversation']
-        a = datetime.datetime.now()
-        a = conv.creation_date + datetime.timedelta(seconds = s.TIME_TO_CLOSE_CONVERSATION.second)
-        now = datetime.datetime.now()
-        diff =  a - now 
-       
-        if diff.days < 0:
-            d = 0
-            self.started = True
+        print('1')
+        if self.started:
+            return 0
         else:
-            d = diff
+            print('2')
+            conv = self.scope['conversation']
+            #a = datetime.datetime.now()
+            #time.sleep(3)
+            #a = a + datetime.timedelta(seconds = s.TIME_TO_CLOSE_CONVERSATION.second)
+            a = conv.creation_date + datetime.timedelta(seconds = s.TIME_TO_CLOSE_CONVERSATION.second)
+            now = datetime.datetime.now()
+            diff =  a - now 
+            print('3')
+           
+            if diff.days < 0:
+                d = 0
+                self.started = True
+            else:
+                d = diff
 
-        return d
+            print('4')
+            return d
+           

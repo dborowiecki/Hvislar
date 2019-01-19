@@ -10,10 +10,10 @@ class ChatConsumer(WebsocketConsumer):
     def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.room_group_name = 'chat_%s' % self.room_name
-        
+        self.user_group = str(self.scope['account'].account_pk)
+        self.started = False
 
         #In theory creates group only with this user
-        self.user_group = str(self.scope['account'].account_pk)
 
         # Join room group
         conversation = self.scope['conversation']
@@ -88,6 +88,7 @@ class ChatConsumer(WebsocketConsumer):
        
         if diff.days < 0:
             d = 0
+            self.started = True
         else:
             d = diff
 

@@ -40,7 +40,8 @@ CREATE TABLE contact (
 
 CREATE TABLE contact_list (
 	account_fk_id INTEGER REFERENCES account(account_pk),
-	contact_fk_id INTEGER REFERENCES contact(contact_pk)
+	contact_fk_id INTEGER REFERENCES contact(contact_pk),
+	friend_account_fk_id INTEGER REFERENCES account(account_pk)
 );
 
 CREATE TABLE message (

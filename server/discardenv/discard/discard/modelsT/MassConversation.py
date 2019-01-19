@@ -21,7 +21,7 @@ class MassConversation(models.Model):
     room_name           = models.CharField(unique = True, max_length=255)
     allow_new_users     = models.BooleanField(default = True)
     finished            = models.BooleanField(default=False)
-    creation_cate       = models.DateTimeField(auto_now_add=True)
+    creation_date       = models.DateTimeField(auto_now_add=True)
 
 
     def auth_user(self, account):

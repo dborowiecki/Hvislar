@@ -190,7 +190,7 @@ def add_user_description(request):
         user                 = Account.objects.get(passwd = passwd, email = email)
 
         if user is not None:
-            if user.add_description(description):
+            if AccountManager(user).add_description(description):
                 response['success'] = True
     except Exception as e:
         print(e)
@@ -224,10 +224,10 @@ def get_user_description(request):
     try:
         user          = request.POST.get("username")
 
-        account       = Account.objects.get(username = password)
+        account       = Account.objects.get(username = user)
 
         if account is not None:
-            response['description'] = account.get_description()
+            response['description'] = AccountManager(account).get_description()
             response['success'] = True
     except Exception as e:
         print(e)

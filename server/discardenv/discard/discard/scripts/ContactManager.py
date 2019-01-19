@@ -235,3 +235,23 @@ def get_user_description(request):
 
     return JsonResponse(response)
 
+@csrf_exempt
+def get_potential_friends(request):
+    response ={
+        'success': False
+    }
+    try:
+        passwd               = request.POST.get("password")
+        email                = request.POST.get("email")
+
+        user                 = Account.objects.get(passwd = passwd, email = email)
+
+        if user is not None:
+            friends = Account.objects.all()[:10]
+            response['accounts'] = [account.username for account in friends]
+            response['success']  = True
+    except Exception as e:
+        print(e)
+        response["error"] = str(e)
+
+    return JsonResponse(response)

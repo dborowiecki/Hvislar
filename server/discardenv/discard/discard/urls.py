@@ -25,6 +25,7 @@ urlpatterns = [
     path('register/', register),
     path('login/', logon),
     path('getFriendList/', get_user_contacts),
+    path('getPotentialFriends/', get_potential_friends),
     path('requestContact/', request_contact),
     path('answerContactRequest/', request_contact_response),
     path('sendMessage/', send_message),

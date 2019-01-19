@@ -5,6 +5,9 @@ from django.http import JsonResponse
 from datetime import datetime
 from django.views.decorators.csrf import csrf_exempt
 from ..modelsT.Account import Account
+from ..modelsT.AccountManager import AccountManager
+from ..modelsT.Message import Message
+from ..modelsT.ConversationManager import ConversationManager
 import json
 
 
@@ -22,7 +25,7 @@ def send_message(request):
         account       = Account.objects.get(passwd = password, email = user)
         reciver       = Account.objects.get(username = reciver_name)
 
-        contact = reciver.get_contact(account)
+        contact = AccountManager(reciver).get_contact(account)
         conversation = contact.conversation_fk
 
         if conversation is not None:
@@ -48,6 +51,7 @@ def send_message(request):
 
 @csrf_exempt
 def get_messages_from_conversation(request):
+    """See: modelsT/ConversationManager.py"""
     response = {
         'success': False
     }
@@ -63,20 +67,20 @@ def get_messages_from_conversation(request):
         account       = Account.objects.get(passwd = password, email = user)
         interlocutor  = Account.objects.get(username = user2)
 
-        contact = interlocutor.get_contact(account)
+        contact = AccountManager(interlocutor).get_contact(account)
         conversation = contact.conversation_fk
 
         if conversation is not None:
             #TODO transform to get other than only message number
             response['fetched_messages'] = list(
-                conversation.get_messages_from_conversation(
+                ConversationManager(conversation).get_messages_from_conversation(
                 number_of_messages = int(msg_number), 
                 time_from = msg_from,
                 time_to = msg_to)
                 .values('content_of_msg', 'sender_fk', 'send_time'))
             #response['fetched_messages'] = [[x.content_of_msg, x.send for x = []]
             response['success'] = True
-            account.get_contact(interlocutor).status = False
+            AccountManager(account).get_contact(interlocutor).status = False
 
     except Exception as e:
         print(e)

@@ -2,6 +2,7 @@ from .Account import Account
 from .Conversation import Conversation
 from .ContactList import ContactList
 from .Contact import Contact
+from .AccountAbout import AccountAbout
 class AccountManager():
 
 

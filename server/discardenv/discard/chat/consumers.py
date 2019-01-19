@@ -1,6 +1,8 @@
 # chat/consumers.py
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
+from channels.layers import get_channel_layer
+from .ChannelLayerBattleRoyalerManager import BattleRoyalManager
 import discard.modelsT as model
 import discard.chat_settings as s
 import json
@@ -13,18 +15,17 @@ class ChatConsumer(WebsocketConsumer):
         self.user_group = str(self.scope['account'].account_pk)
         self.started = False
 
-        #In theory creates group only with this user
-
         # Join room group
         conversation = self.scope['conversation']
        
         d = self.get_time_before_start()
         print(str(conversation))
-        #MA WYSYŁAĆ UŻYTKOWNIKOWI CZAS POZOSTAŁY DO ROZPOCZĘCIA:
         async_to_sync(self.channel_layer.group_add)(
             self.user_group,
             self.channel_name
         )
+
+        #MA WYSYŁAĆ UŻYTKOWNIKOWI CZAS POZOSTAŁY DO ROZPOCZĘCIA:
         async_to_sync(self.channel_layer.group_send)(
             self.user_group, 
             {
@@ -37,6 +38,13 @@ class ChatConsumer(WebsocketConsumer):
              self.room_group_name,
              self.channel_name
         )
+
+        if hasattr(self.channel_layer,'xD') is False:
+            print("SHOULD START VOTE")
+            self.channel_layer.xD = BattleRoyalManager(self.channel_layer, self.room_group_name)
+        else:
+            print("SHOULD START VOTE1")
+            self.channel_layer.xD.change_vote_state()
 
         self.accept()
 
@@ -53,6 +61,8 @@ class ChatConsumer(WebsocketConsumer):
         message = text_data_json['message']
 
         # Send message to room group
+        channel_layer = get_channel_layer()
+        print(str(channel_layer))
         if self.started:
             async_to_sync(self.channel_layer.group_send)(
                 self.room_group_name,
@@ -105,4 +115,12 @@ class ChatConsumer(WebsocketConsumer):
 
             print('4')
             return d
-           
+    
+    def voting_send(self, event):
+        message = event['message']
+        s = event['start']
+        # Send message to WebSocket
+        self.send(text_data=json.dumps({
+            'message': message,
+            'start': s
+        }))

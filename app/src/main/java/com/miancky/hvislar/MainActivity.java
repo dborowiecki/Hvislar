@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void goToLoginScreen(View view){
-        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+        Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
     }
 }

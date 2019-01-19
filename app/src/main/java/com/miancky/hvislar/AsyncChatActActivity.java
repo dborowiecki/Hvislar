@@ -1,8 +1,9 @@
 package com.miancky.hvislar;
 
+import android.content.Intent;
 import android.os.Build;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -10,12 +11,9 @@ import android.widget.TextView;
 
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,13 +34,13 @@ public class AsyncChatActActivity extends AppCompatActivity {
 
     private void connectWebSocket() {
         URI uri;
-        Map<String,String> httpHeaders = new HashMap<String, String>();
+        Map<String,String> httpHeaders = new HashMap<>();
         //TODO: Should take login and password from intent
-        //AUTHENTICATION STRING BUILD AS String 'login,email'
+        //AUTHENTICATION STRING BUILD AS String 'login,password'
+        Intent intent = getIntent();
         httpHeaders.put( "auth", "dobryKolega,123qwe" );
         try {
-            //TODO: Fetching ip from R.string.id dont work, needed fix
-            uri = new URI("ws://192.168.1.101:8000/ws/chat/lobby/");
+            uri = new URI("ws://+"+R.string.ip+":8000/ws/chat/lobby/");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -60,8 +58,8 @@ public class AsyncChatActActivity extends AppCompatActivity {
                 String message = "Hello from " + Build.MANUFACTURER + " " + Build.MODEL;
                 mWebSocketClient.setAttachment("pomocy");
 
-                //TODO: Additional messages should be in sended json object
-                //TODO: in final version shouldnt push this message
+                //TODO: Additional messages should be in sent json object
+                //TODO: in final version shouldn't push this message
                 JSONObject arr = new JSONObject();
                 try {
                     arr.put("message", message);
@@ -86,12 +84,12 @@ public class AsyncChatActActivity extends AppCompatActivity {
                         recived.put("message", recived.get("message").toString()+recived.get("time").toString());
                     }
                     final String message = recived.get("message").toString();
-
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            TextView textView = (TextView) findViewById(R.id.chatTextView);
-                            textView.setText(textView.getText() + "\n" + message);
+                            TextView textView = findViewById(R.id.chatTextView);
+                            String temp=textView.getText() + "\n" + message;
+                            textView.setText(temp);
                         }
                     });
                 }
@@ -116,11 +114,11 @@ public class AsyncChatActActivity extends AppCompatActivity {
     }
 
     public void sendMessage(View view) {
-        EditText editText = (EditText)findViewById(R.id.sendEditText);
+        EditText editText = findViewById(R.id.sendEditText);
         try {
-            JSONObject sendedObject = new JSONObject();
-            sendedObject.put("message", editText.getText());
-            mWebSocketClient.send(sendedObject.toString());
+            JSONObject sentObject = new JSONObject();
+            sentObject.put("message", editText.getText());
+            mWebSocketClient.send(sentObject.toString());
             editText.setText("");
         }
         catch (Exception e){

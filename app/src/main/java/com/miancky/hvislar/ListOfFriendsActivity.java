@@ -1,16 +1,13 @@
 package com.miancky.hvislar;
 
-import android.app.ListActivity;
 import android.content.Intent;
 import android.content.res.AssetManager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -24,12 +21,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -44,9 +39,9 @@ public class ListOfFriendsActivity extends AppCompatActivity {
         String name = intent.getStringExtra("name");
         String email = intent.getStringExtra("email");
 
-        ListView listOfFriends = (ListView)findViewById(R.id.lvFriends);
+        ListView listOfFriends = findViewById(R.id.lvFriends);
         // create the ArrayList to store the titles of nodes
-        final ArrayList<String> listItems = new ArrayList<String>();
+        final ArrayList<String> listItems = new ArrayList<>();
         //TODO: should take friends from db
         getListOfFriends(new VolleyCallback() {
             @Override
@@ -54,8 +49,7 @@ public class ListOfFriendsActivity extends AppCompatActivity {
                 listItems.addAll(result);
             }
         });
-        ArrayAdapter ad = new ArrayAdapter(ListOfFriendsActivity.this,
-                android.R.layout.simple_list_item_1, listItems);
+        ArrayAdapter<String> ad = new ArrayAdapter<>(ListOfFriendsActivity.this, android.R.layout.simple_list_item_1, listItems);
 
         // give adapter to ListView UI element to render
         listOfFriends.setAdapter(ad);
@@ -70,6 +64,11 @@ public class ListOfFriendsActivity extends AppCompatActivity {
             }
         });
         Toast.makeText(ListOfFriendsActivity.this, listItems.toString(), Toast.LENGTH_SHORT).show();
+    }
+
+    public void goAsyncChat(View view){
+        Intent intent = new Intent(this, AsyncChatActActivity.class);
+        startActivity(intent);
     }
 
     public void goToUserProfile(View view){
@@ -123,7 +122,7 @@ public class ListOfFriendsActivity extends AppCompatActivity {
                     }){
                 @Override
                 protected Map<String,String> getParams(){
-                    Map<String,String> params = new HashMap<String, String>();
+                    Map<String,String> params = new HashMap<>();
                     params.put("username", getIntent().getStringExtra("name"));
                     return params;
                 }
@@ -138,7 +137,7 @@ public class ListOfFriendsActivity extends AppCompatActivity {
         }
     }
     //TODO: refactor, move to another class
-    public String convert(InputStream inputStream, Charset charset) throws IOException {
+    public String convert(InputStream inputStream, Charset charset) {
         Scanner scanner = new Scanner(inputStream, charset.name());
         return scanner.useDelimiter("\\A").next();
     }

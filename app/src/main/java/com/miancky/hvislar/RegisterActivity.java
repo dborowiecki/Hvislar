@@ -1,13 +1,7 @@
 package com.miancky.hvislar;
 
-import android.content.Intent;
-import android.content.res.AssetManager;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -25,7 +19,6 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.HashMap;
@@ -47,8 +40,6 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     public void goToLoginScreen(View view){
-        /*Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-        startActivity(intent);*/
         finish();
     }
 
@@ -58,9 +49,9 @@ public class RegisterActivity extends AppCompatActivity {
         final EditText ePassword = findViewById(R.id.tPassword);
         final String username = eLogin.getText().toString().trim();
         final String password = ePassword.getText().toString().trim();
-        final String email = eEmail.getText().toString().trim();
+        final String email = eEmail.getText().toString().toLowerCase().trim();
 
-        Toast.makeText(RegisterActivity.this,email.toString(),Toast.LENGTH_LONG).show();
+        Toast.makeText(RegisterActivity.this, email,Toast.LENGTH_LONG).show();
         //URL IN ASSETS FILE CALLED CONFIG
         //TODO: Create private asset config file (with JSON object?) and class to get data from it
         try {
@@ -71,7 +62,17 @@ public class RegisterActivity extends AppCompatActivity {
 
                     @Override
                     public void onResponse(String response) {
-                        Toast.makeText(RegisterActivity.this,response,Toast.LENGTH_LONG).show();
+                        try{
+                            JSONObject JSONResponse=new JSONObject(response);
+                            if(JSONResponse.getBoolean("success")){
+                                Toast.makeText(RegisterActivity.this,getString(R.string.registration_completed),Toast.LENGTH_LONG).show();
+                                finish();
+                            }else{
+                                Toast.makeText(RegisterActivity.this,getString(R.string.registration_failed),Toast.LENGTH_LONG).show();
+                            }
+                        } catch(JSONException e){
+                            e.printStackTrace();
+                        }
                     }
                 },
                 new Response.ErrorListener() {

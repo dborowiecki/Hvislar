@@ -8,6 +8,7 @@ import discard.chat_settings as s
 import json
 import datetime
 import time
+import threading
 class ChatConsumer(WebsocketConsumer):
     def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
@@ -39,13 +40,21 @@ class ChatConsumer(WebsocketConsumer):
              self.channel_name
         )
 
+        #check if is the same for all rooms or only for one 
         if hasattr(self.channel_layer,'xD') is False:
             print("SHOULD START VOTE")
+            #TODO: SETUP METHOD SHOULD DEFINE TIME AND AFTER COUNTDOWN SEND TO ALL USERS
+            #ANOTHER LIST OF ANOTHER USERS, 
+            #self.setup()
             self.channel_layer.xD = BattleRoyalManager(self.channel_layer, self.room_group_name)
+            #should wait 10 seconds and then run battle royale
+            t = threading.Timer(10, self.channel_layer.xD.start_battle_royale)
+            t.start()
         else:
-            print("SHOULD START VOTE1")
-            self.channel_layer.xD.change_vote_state()
+            print("Not initialization")
+            #self.channel_layer.xD.change_vote_state()
 
+        self.channel_layer.xD.add_consumer_account(self.scope['account'])
         self.accept()
 
     def disconnect(self, close_code):
@@ -59,6 +68,11 @@ class ChatConsumer(WebsocketConsumer):
     def receive(self, text_data):
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
+
+        if hasattr(self.channel_layer,'vote') is True:
+            voted_user = text_data_json['vote']
+            self.channel_layer.xD.addVote(self.scope['account'], voted_user)
+
 
         # Send message to room group
         channel_layer = get_channel_layer()
@@ -80,6 +94,8 @@ class ChatConsumer(WebsocketConsumer):
 
         # Send message to WebSocket
         self.send(text_data=json.dumps({
+            'type': 'chat_message',
+            'sender': self.scope['account'].username,
             'message': message
         }))
 
@@ -88,8 +104,20 @@ class ChatConsumer(WebsocketConsumer):
         time = event['time']
         # Send message to WebSocket
         self.send(text_data=json.dumps({
+            'type': 'countdown',
             'message': message,
             'time': time
+        }))
+
+    def send_usernames(self, event):
+        usernames = event['usernames']
+
+        # Send message to WebSocket
+        self.send(text_data=json.dumps({
+            'type': 'usernames',
+            #todo remove this message, added only for anroid functionality sustain
+            'message': str(usernames),
+            'usernames': usernames
         }))
 
     def get_time_before_start(self):
@@ -121,6 +149,16 @@ class ChatConsumer(WebsocketConsumer):
         s = event['start']
         # Send message to WebSocket
         self.send(text_data=json.dumps({
+            'type': 'voting_status',
             'message': message,
             'start': s
+        }))
+
+    def send_info_about_discarted_user_(self, event):
+        message = event['message']
+        s = event['start']
+        # Send message to WebSocket
+        self.send(text_data=json.dumps({
+            'type': 'discared_info',
+            'discarted': message,
         }))

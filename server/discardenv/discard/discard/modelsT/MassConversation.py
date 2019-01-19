@@ -3,6 +3,7 @@ from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User
 from django.utils.crypto import get_random_string
 from .Account import Account
+from threading import Timer
 class MassConversation(models.Model):
     """
     Class which is a model for mass conversation
@@ -20,6 +21,7 @@ class MassConversation(models.Model):
     room_name           = models.CharField(unique = True, max_length=255)
     allow_new_users     = models.BooleanField(default = True)
     finished            = models.BooleanField(default=False)
+    creation_cate       = models.DateTimeField(auto_now_add=True)
 
 
     def auth_user(self, account):
@@ -46,29 +48,7 @@ class MassConversation(models.Model):
         active = [conv.conversation_fk for conv in x if conv.user_removed == False]
         return active
 
-    def add_account_to_conversation(self, account):
-        """
-        Method that adds user to mass converstion
-
-        Parameters
-        ----------
-        account: Account
-            Account that is added to converstion
-
-        Return
-        ------
-        boolean
-            If addition was successful True, False in other case
-        """
-        added = AccountInMassConversation(
-            conversation_fk = self,
-            user_fk = account)
-        added.save()
-        check = AccountInMassConversation.objects.get(conversation_fk = self, user_fk = account)
-        if check is not None:
-            return True
-        else:
-            return False
+    
 
     def add_account_to_last_open_conversation(self, account):
         last_open_conversation = None
@@ -79,13 +59,16 @@ class MassConversation(models.Model):
             print(e)
         finally:
             if last_open_conversation is not None:
-                last_open_conversation.add_account_to_conversation(account)
+                x = AccountInMassConversation(conversation_fk = last_open_conversation, user_fk = account)
+                x.save()
             else:
                 self.create_new_unique_conversation()
                 last_open_conversation = MassConversation.objects.filter(allow_new_users = True).all()[0]
                #TODO: Fetch this conversation from method to avoid recursion
-                last_open_conversation.add_account_to_conversation(account)
-                return None
+                x = AccountInMassConversation(conversation_fk = last_open_conversation, user_fk = account)
+                x.save()
+                #last_open_conversation.add_account_to_conversation(account)
+            return last_open_conversation
 
     def remove_account_from_conversation(self, account):
         """
@@ -125,7 +108,7 @@ class MassConversation(models.Model):
         new_conversation = MassConversation(room_name = name)
         new_conversation.save()
         check = MassConversation.objects.get(room_name = name)
-        if check is not None:
+        if check is not None:   
             return True
         else:
             return False
@@ -168,7 +151,7 @@ class AccountInMassConversation(models.Model):
     user_fk           = models.ForeignKey(Account, on_delete=models.CASCADE)
     user_removed      = models.BooleanField(default=False)
 
+
     class Meta:
         db_table = '"accounts_in_mass_conversation"'
         unique_together = ('conversation_fk', 'user_fk')
-

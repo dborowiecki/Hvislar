@@ -25,22 +25,19 @@ SECRET_KEY = 'dioqpe3(=3+%h6o2wmfm5rgqv35sqm(bh)cm&2!q!(qn*suo7r'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['10.0.1.97', '10.0.1.96', '192.168.1.101', '10.0.1.93']
+ALLOWED_HOSTS = ['10.0.1.96']
 
 
 # Application definition
 
 INSTALLED_APPS = [
-    'channels',
-    'chat',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'discard',
-    'django.contrib.admindocs' 
+    'discard'
 ]
 
 MIDDLEWARE = [
@@ -126,14 +123,3 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
-
-#Channels
-ASGI_APPLICATION = 'discard.routing.application'
-CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            "hosts":[('127.0.0.1', 6379)],
-        },
-    },
-}

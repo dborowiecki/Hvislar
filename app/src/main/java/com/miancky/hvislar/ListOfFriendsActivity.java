@@ -1,7 +1,6 @@
 package com.miancky.hvislar;
 
 import android.content.Intent;
-import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -9,25 +8,19 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
-
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.InputStream;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 public class ListOfFriendsActivity extends AppCompatActivity {
 
     @Override
@@ -84,29 +77,24 @@ public class ListOfFriendsActivity extends AppCompatActivity {
         intent.putExtra("email", intent.getStringExtra("email"));
         startActivity(intent);
     }
-    public void getListOfFriends(final VolleyCallback callback){
+    private void getListOfFriends(final VolleyCallback callback){
         try {
-            AssetManager am = getApplicationContext().getAssets();
-            InputStream is = am.open("private/CONFIG");
-            final String LOGIN_URL = convert(is, Charset.defaultCharset())+"getUserFriends.php";
-            StringRequest stringRequest = new StringRequest(Request.Method.POST, LOGIN_URL,
+            final String URL = "http://" + getString(R.string.ip) + ":8000/getFriendList/";
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
-                            List<String> recivedUsers = new ArrayList<>();
+                            List<String> receivedUsers = new ArrayList<>();
                             try {
-                                JSONObject JSONresponse = new JSONObject(response);
-                                if(!JSONresponse.getBoolean("success")){
+                                JSONObject JSONResponse = new JSONObject(response);
+                                if(!JSONResponse.getBoolean("success")){
                                     Toast.makeText(ListOfFriendsActivity.this,"Fetching friends list failed",Toast.LENGTH_LONG).show();
                                 }
                                 else{
-                                    JSONArray friends = JSONresponse.getJSONArray("users");
-                                    for(int i = 0; i < friends.length(); i++){
-                                        recivedUsers.add(friends.getString(i));
-                                        Toast.makeText(ListOfFriendsActivity.this,"hello",Toast.LENGTH_LONG).show();
-                                    }
-                                    Toast.makeText(ListOfFriendsActivity.this,"hello",Toast.LENGTH_LONG).show();
-                                    callback.onSuccess(recivedUsers);
+                                    JSONArray friends = JSONResponse.getJSONArray("contacts");
+                                    for(int i = 0; i < friends.length(); i++)
+                                        receivedUsers.add(friends.getString(i));
+                                    callback.onSuccess(receivedUsers);
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -117,18 +105,19 @@ public class ListOfFriendsActivity extends AppCompatActivity {
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            Toast.makeText(ListOfFriendsActivity.this,error.toString()+LOGIN_URL,Toast.LENGTH_LONG).show();
+                            Toast.makeText(ListOfFriendsActivity.this,error.toString()+URL,Toast.LENGTH_LONG).show();
                         }
                     }){
                 @Override
                 protected Map<String,String> getParams(){
                     Map<String,String> params = new HashMap<>();
-                    params.put("username", getIntent().getStringExtra("name"));
+                    Intent intent = getIntent();
+                    params.put("email", intent.getStringExtra("email"));
+                    params.put("password", intent.getStringExtra("password"));
                     return params;
                 }
 
             };
-
 
             RequestQueue requestQueue = Volley.newRequestQueue(this);
             requestQueue.add(stringRequest);

@@ -69,6 +69,7 @@ public class LoginActivity extends AppCompatActivity {
                                     Intent intent = new Intent(LoginActivity.this, UserProfile.class);
                                     intent.putExtra("name", name);
                                     intent.putExtra("email", email);
+                                    intent.putExtra("password", password);
                                     startActivity(intent);
                                 }
                             } catch (JSONException e) {

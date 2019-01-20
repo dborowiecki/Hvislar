@@ -44,7 +44,8 @@ public class UserProfile extends AppCompatActivity {
     public void goToFriendListScreen(View view){
         Intent intent = new Intent(UserProfile.this, ListOfFriendsActivity.class);
         intent.putExtra("name", getIntent().getStringExtra("name"));
-        intent.putExtra("email", intent.getStringExtra("email"));
+        intent.putExtra("email", getIntent().getStringExtra("email"));
+        intent.putExtra("password", getIntent().getStringExtra("password"));
         startActivity(intent);
     }
 

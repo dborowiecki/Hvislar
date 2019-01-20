@@ -58,13 +58,13 @@ public class LoginActivity extends AppCompatActivity {
                         public void onResponse(String response) {
                             Toast.makeText(LoginActivity.this,response,Toast.LENGTH_LONG).show();
                             try {
-                                JSONObject JSONresponse = new JSONObject(response);
-                                if(!JSONresponse.getBoolean("success")){
+                                JSONObject JSONResponse = new JSONObject(response);
+                                if(!JSONResponse.getBoolean("success")){
                                     Toast.makeText(LoginActivity.this,"Login failed, incorrect data :)",Toast.LENGTH_LONG).show();
                                 }
                                 else{
-                                    String name = JSONresponse.getString("name");
-                                    String email = JSONresponse.getString("email");
+                                    String name = JSONResponse.getString("name");
+                                    String email = JSONResponse.getString("email");
 
                                     Intent intent = new Intent(LoginActivity.this, UserProfile.class);
                                     intent.putExtra("name", name);

@@ -12,11 +12,16 @@ import android.widget.Toast;
 
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.net.URI;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+
+import static java.lang.Thread.sleep;
 
 public class AsyncChatActActivity extends AppCompatActivity {
     WebSocketClient mWebSocketClient;
@@ -30,6 +35,7 @@ public class AsyncChatActActivity extends AppCompatActivity {
 
         chatWindow.setText("Wiadomosc+\n");
 
+        //TODO: HAVE TO DISCONNECT ON RETURNING FROM VIEW
         connectWebSocket();
     }
 
@@ -52,6 +58,7 @@ public class AsyncChatActActivity extends AppCompatActivity {
         *
          */
         mWebSocketClient = new WebSocketClient(uri, httpHeaders) {
+            LinkedList<String> users;
 
             @Override
             public void onOpen(ServerHandshake serverHandshake) {
@@ -80,22 +87,81 @@ public class AsyncChatActActivity extends AppCompatActivity {
             public void onMessage(String s) {
                 try {
                     final JSONObject recived = new JSONObject(s);
-                    if(recived.has("time")){
+                    if(recived.get("type").toString().equals("countdown")){
                          //TODO: build timer that will count to battle royal start
                          //buildTimer()
-                        recived.put("message", recived.get("message").toString()+recived.get("time").toString());
+                        final String  countdown = recived.get("time").toString();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                TextView textView = findViewById(R.id.timerTextView);
+                                String temp= countdown + "/ " +"10";
+                                textView.setText(temp);
+
+                            }
+                        });
                     }
+
+                    if(recived.get("type").toString().equals("usernames")){
+                        JSONArray temp = recived.getJSONArray("usernames");
+                        users = new LinkedList<>();
+                        for(int i=0;i<temp.length();i++){
+                            users.add(temp.getString(i));
+                        }
+                        final JSONArray startUsers = temp;
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                TextView textView = findViewById(R.id.usersTextView);
+                                //TODO: CHANGE FOR SOME KIND OF OBJECT WITH POSSIBILITY OF VOTE
+                                StringBuilder userList = new StringBuilder("USERS:");
+                                for(String user : users)
+                                    userList.append("\n"+user);
+
+                                textView.setText(userList.toString());
+                            }
+                        });
+                    }
+
+                    if(recived.get("type").toString().equals("voting_status")){
+                        JSONArray removedUsers = recived.getJSONArray("removed");
+
+                        for(String user: users)
+                            for(int j=0; j<removedUsers.length();j++)
+                                if(removedUsers.getString(j).equals(user))
+                                    users.remove(user);
+
+
+                        final List updatedUsers = users;
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                TextView textView = findViewById(R.id.usersTextView);
+
+                                StringBuilder userList = new StringBuilder("USERS:");
+                                for(String user : users)
+                                    userList.append("\n"+user);
+
+                                textView.setText(userList);
+                            }
+                        });
+                    }
+
                     final String message = recived.get("message").toString();
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             TextView textView = findViewById(R.id.chatTextView);
                             String temp=textView.getText() + "\n" + message;
+
                             textView.setText(temp);
                         }
                     });
                 }
                 catch (Exception e){
+                    e.printStackTrace();
                     Log.i("WebsocketMessage", e.getMessage());
                 }
             }

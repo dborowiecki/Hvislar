@@ -21,6 +21,7 @@ class ChatConsumer(WebsocketConsumer):
        
         d = self.get_time_before_start()
         print(str(conversation))
+
         async_to_sync(self.channel_layer.group_add)(
             self.user_group,
             self.channel_name
@@ -46,15 +47,22 @@ class ChatConsumer(WebsocketConsumer):
             #TODO: SETUP METHOD SHOULD DEFINE TIME AND AFTER COUNTDOWN SEND TO ALL USERS
             #ANOTHER LIST OF ANOTHER USERS, 
             #self.setup()
-            self.channel_layer.xD = BattleRoyalManager(self.channel_layer, self.room_group_name)
+            self.channel_layer.xD = BattleRoyalManager(
+                self.channel_layer, 
+                self.room_group_name,
+                self.channel_name,
+                self.room_name)
             #should wait 10 seconds and then run battle royale
-            t = threading.Timer(10, self.channel_layer.xD.start_battle_royale)
+            t = threading.Timer(5, self.channel_layer.xD.start_battle_royale)
             t.start()
         else:
             print("Not initialization")
-            #self.channel_layer.xD.change_vote_state()
 
-        self.channel_layer.xD.add_consumer_account(self.scope['account'])
+
+        self.channel_layer.xD.add_consumer_account(
+            self.scope['account'], 
+            (self.user_group, self.channel_name)
+            )
         self.accept()
 
     def disconnect(self, close_code):
@@ -120,6 +128,17 @@ class ChatConsumer(WebsocketConsumer):
             'usernames': usernames
         }))
 
+    def inform_about_kick(self, event):
+        username = event['username']
+
+        # Send message to WebSocket
+        self.send(text_data=json.dumps({
+            'type': 'info_about_kick',
+            #todo remove this message, added only for anroid functionality sustain
+            'message': str(username) + ' kick',
+            'usernames': username
+        }))
+
     def get_time_before_start(self):
         print('1')
         if self.started:
@@ -146,12 +165,12 @@ class ChatConsumer(WebsocketConsumer):
     
     def voting_send(self, event):
         message = event['message']
-        s = event['start']
+        removed = event['removed']
         # Send message to WebSocket
         self.send(text_data=json.dumps({
             'type': 'voting_status',
             'message': message,
-            'start': s
+            'removed': removed
         }))
 
     def send_info_about_discarted_user_(self, event):

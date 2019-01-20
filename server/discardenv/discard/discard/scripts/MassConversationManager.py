@@ -48,3 +48,9 @@ def close_adding(conversation):
     print('D')
     conversation.allow_new_users = False
     conversation.save()
+
+def change_user_state(conversation_name, user):
+    conversation = MassConversation.objects.get(room_name = conversation_name)
+    account = Account.objects.get(username=user)
+    print("PLACE FOR REMOVE NOIS")
+    conversation.remove_account_from_conversation(account)

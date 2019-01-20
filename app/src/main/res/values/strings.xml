@@ -7,10 +7,14 @@
     <string name="description">Be one of the first persons to ever experience a brand new way of communication, friend finding and social games.</string>
     <string name="enjoy">ENJOY!</string>
     <string name="test">TEST</string>
-    <string name="ip">192.168.1.101</string>
+    <string name="ip">10.0.1.93</string>
     <string name="registration_completed">Registration completed successfully</string>
     <string name="registration_failed">Registration failed</string>
     <string name="my_profile">My Profile</string>
     <string name="add_friends">Add Friends</string>
     <string name="temp_chat">Temp chat</string>
+    <string name="title_activity_set_description">SetDescriptionActivity</string>
+    <string name="descriptionOrder">Tell us a few words about yourself</string>
+    <string name="typeHere">Type Here</string>
+    <string name="applyText">Apply</string>
 </resources>

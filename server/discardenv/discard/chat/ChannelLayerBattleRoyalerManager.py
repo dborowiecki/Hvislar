@@ -36,7 +36,7 @@ class BattleRoyalManager():
 	def change_vote_state(self):
 		print("Changing vote state")
 		to_kick = self.sum_up_voting()
-		self.remove_users(to_kick)
+		self._remove_users(to_kick)
 
 		self.spread_the_news_about_vote(to_kick)
 
@@ -132,7 +132,7 @@ class BattleRoyalManager():
 
 		return kicked_usernames
 
-	def remove_users(self, usernames):
+	def _remove_users(self, usernames):
 		self.remove_consumer_accounts(usernames)
 		self.consumer_votes = {}
 

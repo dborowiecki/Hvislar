@@ -23,6 +23,7 @@ import java.nio.charset.Charset;
 import java.util.*;
 public class ListOfFriendsActivity extends AppCompatActivity {
 
+    String room_name;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,7 +61,12 @@ public class ListOfFriendsActivity extends AppCompatActivity {
     }
 
     public void goAsyncChat(View view){
+        getRoomName();
         Intent intent = new Intent(this, AsyncChatActActivity.class);
+        intent.putExtra("name",     getIntent().getStringExtra("name"));
+        intent.putExtra("password", getIntent().getStringExtra("password"));
+        intent.putExtra("email",    getIntent().getStringExtra("email"));
+        intent.putExtra("roomName",    room_name);
         startActivity(intent);
     }
 
@@ -124,6 +130,46 @@ public class ListOfFriendsActivity extends AppCompatActivity {
         } catch (Exception e){
             Toast.makeText(ListOfFriendsActivity.this,e.toString(),Toast.LENGTH_LONG).show();
         }
+    }
+
+    private void getRoomName() {
+        Intent intent = getIntent();
+
+        final String GET_DESCRIPTION_URL = "http://" + getString(R.string.ip) + ":8000/joinNewMassConversation/";
+        final String password = intent.getStringExtra("password");
+        final String email = intent.getStringExtra("email");
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, GET_DESCRIPTION_URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject JSONResponse = new JSONObject(response);
+                            if (!JSONResponse.getBoolean("success"))
+                                Toast.makeText(ListOfFriendsActivity.this, "Fail fining room", Toast.LENGTH_LONG).show();
+                            else
+                                room_name = JSONResponse.getString("room_name");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(ListOfFriendsActivity.this, error.toString(), Toast.LENGTH_LONG).show();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("password", password);
+                params.put("email", email);
+                return params;
+            }
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
     }
     //TODO: refactor, move to another class
     public String convert(InputStream inputStream, Charset charset) {

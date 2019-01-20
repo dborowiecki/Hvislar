@@ -47,19 +47,24 @@ class ChatConsumer(WebsocketConsumer):
             #TODO: SETUP METHOD SHOULD DEFINE TIME AND AFTER COUNTDOWN SEND TO ALL USERS
             #ANOTHER LIST OF ANOTHER USERS, 
             #self.setup()
-            self.channel_layer.xD = BattleRoyalManager(
+            self.channel_layer.xD = {}
+            #should wait 10 seconds and then run battle royale
+          
+        else:
+            print("Not initialization")
+
+        
+        self.channel_layer.xD[self.room_name] = BattleRoyalManager(
                 self.channel_layer, 
                 self.room_group_name,
                 self.channel_name,
                 self.room_name)
-            #should wait 10 seconds and then run battle royale
-            t = threading.Timer(5, self.channel_layer.xD.start_battle_royale)
+        if hasattr(self.channel_layer.xD, self.room_name) is False:
+            t = threading.Timer(5, self.channel_layer.xD[self.room_name].start_battle_royale)
             t.start()
-        else:
-            print("Not initialization")
 
 
-        self.channel_layer.xD.add_consumer_account(
+        self.channel_layer.xD[self.room_name].add_consumer_account(
             self.scope['account'], 
             (self.user_group, self.channel_name)
             )
@@ -67,6 +72,8 @@ class ChatConsumer(WebsocketConsumer):
 
     def disconnect(self, close_code):
         # Leave room group
+        print('HELOOOOOO')
+        self.channel_layer.xD[self.room_name].remove_consumer_accounts([self.scope['account'].username])
         async_to_sync(self.channel_layer.group_discard)(
             self.room_group_name,
             self.channel_name
@@ -79,7 +86,7 @@ class ChatConsumer(WebsocketConsumer):
 
         if hasattr(self.channel_layer,'vote') is True:
             voted_user = text_data_json['vote']
-            self.channel_layer.xD.addVote(self.scope['account'], voted_user)
+            self.channel_layer.xD[self.room_name].addVote(self.scope['account'], voted_user)
 
 
         # Send message to room group
@@ -173,11 +180,11 @@ class ChatConsumer(WebsocketConsumer):
             'removed': removed
         }))
 
-    def send_info_about_discarted_user_(self, event):
-        message = event['message']
-        s = event['start']
-        # Send message to WebSocket
-        self.send(text_data=json.dumps({
-            'type': 'discared_info',
-            'discarted': message,
-        }))
+    # def send_info_about_discarted_user_(self, event):
+    #     message = event['message']
+    #     s = event['start']
+    #     # Send message to WebSocket
+    #     self.send(text_data=json.dumps({
+    #         'type': 'discared_info',
+    #         'discarted': message,
+    #     }))

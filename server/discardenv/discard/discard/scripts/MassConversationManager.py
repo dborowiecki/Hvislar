@@ -32,6 +32,7 @@ def add_user_to_mass_conversation(request):
 
     except Exception as e:
         print(e)
+        print(traceback.format_exc())
         response['error'] = str(e)
     finally:
         return JsonResponse(response) 

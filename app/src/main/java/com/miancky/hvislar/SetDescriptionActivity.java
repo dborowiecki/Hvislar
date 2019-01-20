@@ -48,11 +48,7 @@ public class SetDescriptionActivity extends Activity {
                                 if (!JSONResponse.getBoolean("success")) {
                                     Toast.makeText(SetDescriptionActivity.this, "There was a problem with your description.", Toast.LENGTH_LONG).show();
                                 }else{
-                                    Intent intent = new Intent(SetDescriptionActivity.this, UserProfile.class);
-                                    intent.putExtra("name", username);
-                                    intent.putExtra("email", email);
-                                    intent.putExtra("password", password);
-                                    startActivity(intent);
+                                    openUserProfile(username, email, password);
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -77,12 +73,16 @@ public class SetDescriptionActivity extends Activity {
             RequestQueue requestQueue = Volley.newRequestQueue(this);
             requestQueue.add(stringRequest);
         }else{
-            Intent intent2 = new Intent(SetDescriptionActivity.this, UserProfile.class);
-            intent2.putExtra("name", username);
-            intent2.putExtra("email", email);
-            intent2.putExtra("password", password);
-            startActivity(intent2);
+            openUserProfile(username, email, password);
         }
+    }
+
+    private void openUserProfile(String username, String email, String password) {
+        Intent intent = new Intent(SetDescriptionActivity.this, UserProfile.class);
+        intent.putExtra("name", username);
+        intent.putExtra("email", email);
+        intent.putExtra("password", password);
+        startActivity(intent);
     }
 
     public void setDescription(View view){

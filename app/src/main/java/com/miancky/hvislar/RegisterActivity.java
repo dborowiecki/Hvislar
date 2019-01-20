@@ -1,5 +1,6 @@
 package com.miancky.hvislar;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -66,7 +67,11 @@ public class RegisterActivity extends AppCompatActivity {
                             JSONObject JSONResponse=new JSONObject(response);
                             if(JSONResponse.getBoolean("success")){
                                 Toast.makeText(RegisterActivity.this,getString(R.string.registration_completed),Toast.LENGTH_LONG).show();
-                                finish();
+                                Intent intent = new Intent(RegisterActivity.this, SetDescriptionActivity.class);
+                                intent.putExtra("name", username);
+                                intent.putExtra("email", email);
+                                intent.putExtra("password", password);
+                                startActivity(intent);
                             }else{
                                 Toast.makeText(RegisterActivity.this,getString(R.string.registration_failed),Toast.LENGTH_LONG).show();
                             }

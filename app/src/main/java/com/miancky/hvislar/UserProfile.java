@@ -68,7 +68,6 @@ public class UserProfile extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Toast.makeText(UserProfile.this, response, Toast.LENGTH_LONG).show();
                         try {
                             JSONObject JSONResponse = new JSONObject(response);
                             if (!JSONResponse.getBoolean("success"))

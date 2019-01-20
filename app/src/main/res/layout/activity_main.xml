@@ -11,7 +11,7 @@
         android:layout_width="426dp"
         android:layout_height="125dp"
         android:layout_marginStart="8dp"
-        android:background="@color/colorPrimary"
+        android:background="@color/primaryColor"
         android:onClick="goToLoginScreen"
         android:text="@string/tap_here_to_continue"
         android:textSize="18sp"
@@ -42,7 +42,7 @@
             android:fontFamily="sans-serif"
             android:text="@string/welcome"
             android:textAlignment="center"
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/primaryTextColor"
             android:textSize="30sp"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -54,7 +54,7 @@
             android:lineSpacingExtra="8sp"
             android:text="@string/description"
             android:textAlignment="center"
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/primaryTextColor"
             android:textSize="18sp"
             app:layout_constraintTop_toBottomOf="@+id/textView57"
             tools:layout_editor_absoluteX="0dp" />
@@ -67,7 +67,7 @@
             android:lineSpacingExtra="8sp"
             android:text="@string/enjoy"
             android:textAlignment="center"
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/primaryTextColor"
             android:textSize="18sp"
             app:layout_constraintTop_toBottomOf="@+id/textView58" />
 

@@ -30,7 +30,7 @@ public class SetDescriptionActivity extends Activity {
     }
 
     private void setDescription(){
-        final String GET_DESCRIPTION_URL = "http://" + getString(R.string.ip) + ":8000/addDescription/";
+        final String GET_DESCRIPTION_URL = "http://" + getString(R.string.ip) + getString(R.string.port) + "/addDescription/";
         Intent intent = getIntent();
         final String username = intent.getStringExtra("name");
         final String email = intent.getStringExtra("email");

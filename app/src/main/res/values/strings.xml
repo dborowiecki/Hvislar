@@ -8,6 +8,7 @@
     <string name="enjoy">ENJOY!</string>
     <string name="test">TEST</string>
     <string name="ip">10.0.1.93</string>
+    <string name="port">:8000</string>
     <string name="registration_completed">Registration completed successfully</string>
     <string name="registration_failed">Registration failed</string>
     <string name="my_profile">My Profile</string>

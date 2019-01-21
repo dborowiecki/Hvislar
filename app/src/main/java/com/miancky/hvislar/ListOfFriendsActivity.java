@@ -78,7 +78,7 @@ public class ListOfFriendsActivity extends AppCompatActivity {
     }
     private void getListOfFriends(final VolleyCallback callback){
         try {
-            final String URL = "http://" + getString(R.string.ip) + ":8000/getFriendList/";
+            final String URL = "http://" + getString(R.string.ip) + getString(R.string.port) + "/getFriendList/";
             StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
                     new Response.Listener<String>() {
                         @Override
@@ -128,7 +128,7 @@ public class ListOfFriendsActivity extends AppCompatActivity {
     private void getRoomName() {
         Intent intent = getIntent();
 
-        final String GET_DESCRIPTION_URL = "http://" + getString(R.string.ip) + ":8000/joinNewMassConversation/";
+        final String GET_DESCRIPTION_URL = "http://" + getString(R.string.ip) + getString(R.string.port) + "/joinNewMassConversation/";
         final String password = intent.getStringExtra("password");
         final String email = intent.getStringExtra("email");
 

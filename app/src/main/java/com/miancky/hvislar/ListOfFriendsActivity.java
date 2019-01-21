@@ -23,7 +23,6 @@ import java.nio.charset.Charset;
 import java.util.*;
 public class ListOfFriendsActivity extends AppCompatActivity {
 
-    String room_name;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,12 +61,6 @@ public class ListOfFriendsActivity extends AppCompatActivity {
 
     public void goAsyncChat(View view){
         getRoomName();
-        Intent intent = new Intent(this, AsyncChatActActivity.class);
-        intent.putExtra("name",     getIntent().getStringExtra("name"));
-        intent.putExtra("password", getIntent().getStringExtra("password"));
-        intent.putExtra("email",    getIntent().getStringExtra("email"));
-        intent.putExtra("roomName",    room_name);
-        startActivity(intent);
     }
 
     public void goToUserProfile(View view){
@@ -147,8 +140,14 @@ public class ListOfFriendsActivity extends AppCompatActivity {
                             JSONObject JSONResponse = new JSONObject(response);
                             if (!JSONResponse.getBoolean("success"))
                                 Toast.makeText(ListOfFriendsActivity.this, "Fail fining room", Toast.LENGTH_LONG).show();
-                            else
-                                room_name = JSONResponse.getString("room_name");
+                            else {
+                                Intent intent = new Intent(ListOfFriendsActivity.this, AsyncChatActActivity.class);
+                                intent.putExtra("name",     getIntent().getStringExtra("name"));
+                                intent.putExtra("password", getIntent().getStringExtra("password"));
+                                intent.putExtra("email",    getIntent().getStringExtra("email"));
+                                intent.putExtra("roomName",    JSONResponse.getString("room_name"));
+                                startActivity(intent);
+                            }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

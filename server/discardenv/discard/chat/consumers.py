@@ -9,17 +9,18 @@ import json
 import datetime
 import time
 import threading
+
 class ChatConsumer(WebsocketConsumer):
     def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.room_group_name = 'chat_%s' % self.room_name
         self.user_group = str(self.scope['account'].account_pk)
-        self.started = False
 
         # Join room group
         conversation = self.scope['conversation']
+        c_pk = self.room_name
        
-        d = self.get_time_before_start()
+        
         print(str(conversation))
 
         async_to_sync(self.channel_layer.group_add)(
@@ -28,13 +29,6 @@ class ChatConsumer(WebsocketConsumer):
         )
 
         #MA WYSYŁAĆ UŻYTKOWNIKOWI CZAS POZOSTAŁY DO ROZPOCZĘCIA:
-        async_to_sync(self.channel_layer.group_send)(
-            self.user_group, 
-            {
-                'type': 'start_message',
-                'message': "Alooo, ms User",
-                'time' : str(d)
-            })
 
         async_to_sync(self.channel_layer.group_add)(
              self.room_group_name,
@@ -44,30 +38,52 @@ class ChatConsumer(WebsocketConsumer):
         #check if is the same for all rooms or only for one 
         if hasattr(self.channel_layer,'xD') is False:
             print("SHOULD START VOTE")
+            self.channel_layer.xD = {}
             #TODO: SETUP METHOD SHOULD DEFINE TIME AND AFTER COUNTDOWN SEND TO ALL USERS
             #ANOTHER LIST OF ANOTHER USERS, 
             #self.setup()
-            self.channel_layer.xD = {}
             #should wait 10 seconds and then run battle royale
           
         else:
             print("Not initialization")
 
+        print("ISTNIEJE?!?!!?!?!?!?!?!?n\n\n\n"+
+            str(hasattr(self.channel_layer.xD, c_pk))+
+            "\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+
         
-        self.channel_layer.xD[self.room_name] = BattleRoyalManager(
+        
+        print("--------\nCPK: "+c_pk+"\n-------")
+        print("--------\nCHANNEL LAYER: \n"+str(self.channel_layer)+"\n-------")
+        if  c_pk not in self.channel_layer.xD.keys():
+            print("XDDDDDD\nNEW BATTLE ROYALE ARISING")
+            self.channel_layer.xD[c_pk] = BattleRoyalManager(
                 self.channel_layer, 
                 self.room_group_name,
                 self.channel_name,
                 self.room_name)
-        if hasattr(self.channel_layer.xD, self.room_name) is False:
-            t = threading.Timer(5, self.channel_layer.xD[self.room_name].start_battle_royale)
+            t = threading.Timer(50, self.channel_layer.xD[c_pk].start_battle_royale)
             t.start()
 
 
-        self.channel_layer.xD[self.room_name].add_consumer_account(
+        self.channel_layer.xD[c_pk].add_consumer_account(
             self.scope['account'], 
             (self.user_group, self.channel_name)
             )
+
+        d = self.channel_layer.xD[c_pk].get_time_before_start(conversation)
+
+        async_to_sync(self.channel_layer.group_send)(
+            self.user_group, 
+            {
+                'type': 'start_message',
+                'message': "Alooo, ms ",
+                'time' : str(d)
+            })
+
+        print([a.username for a in self.channel_layer.xD[c_pk].consumer_accounts])
+
+
         self.accept()
 
     def disconnect(self, close_code):
@@ -79,12 +95,15 @@ class ChatConsumer(WebsocketConsumer):
             self.channel_name
         )
 
+    def can_send(self):
+        self.started = True
+
     # Receive message from WebSocket
     def receive(self, text_data):
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
 
-        if hasattr(self.channel_layer,'vote') is True:
+        if 'vote' in text_data_json.keys():
             voted_user = text_data_json['vote']
             self.channel_layer.xD[self.room_name].addVote(self.scope['account'], voted_user)
 
@@ -92,7 +111,8 @@ class ChatConsumer(WebsocketConsumer):
         # Send message to room group
         channel_layer = get_channel_layer()
         print(str(channel_layer))
-        if self.started:
+
+        if not self.scope['conversation'].allow_new_users:
             async_to_sync(self.channel_layer.group_send)(
                 self.room_group_name,
                 {
@@ -101,7 +121,14 @@ class ChatConsumer(WebsocketConsumer):
                 }
             )
         else:
-            self.get_time_before_start()
+            async_to_sync(self.channel_layer.group_send)(
+                self.user_group,
+                {
+                    'type': 'chat_message',
+                    'message': "Didn't started yeet"
+                }
+            )
+       
 
     # Receive message from room group
     def chat_message(self, event):
@@ -126,7 +153,6 @@ class ChatConsumer(WebsocketConsumer):
 
     def send_usernames(self, event):
         usernames = event['usernames']
-
         # Send message to WebSocket
         self.send(text_data=json.dumps({
             'type': 'usernames',
@@ -146,29 +172,6 @@ class ChatConsumer(WebsocketConsumer):
             'usernames': username
         }))
 
-    def get_time_before_start(self):
-        print('1')
-        if self.started:
-            return 0
-        else:
-            print('2')
-            conv = self.scope['conversation']
-            #a = datetime.datetime.now()
-            #time.sleep(3)
-            #a = a + datetime.timedelta(seconds = s.TIME_TO_CLOSE_CONVERSATION.second)
-            a = conv.creation_date + datetime.timedelta(seconds = s.TIME_TO_CLOSE_CONVERSATION.second)
-            now = datetime.datetime.now()
-            diff =  a - now 
-            print('3')
-           
-            if diff.days < 0:
-                d = 0
-                self.started = True
-            else:
-                d = diff
-
-            print('4')
-            return d
     
     def voting_send(self, event):
         message = event['message']
@@ -179,6 +182,21 @@ class ChatConsumer(WebsocketConsumer):
             'message': message,
             'removed': removed
         }))
+
+
+    def finish_send(self, event):
+        message = event['message']
+        # Send message to WebSocket
+        self.send(text_data=json.dumps({
+            'type': 'finish_message',
+            'message': message
+        }))
+
+        self.scope['conversation'].finished = True
+        self.scope['conversation'].save()
+
+        #self.channel_layer.xD[self.room_name] 
+
 
     # def send_info_about_discarted_user_(self, event):
     #     message = event['message']

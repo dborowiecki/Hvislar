@@ -6,7 +6,15 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:clipToPadding="false"
-    android:focusableInTouchMode="true">
+    android:focusableInTouchMode="true"
+    tools:context=".ChatActivity">
+
+    <Button
+        android:id="@+id/refresh"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="establishServerConnection"
+        android:text="Refresh" />
 
     <ListView
         android:layout_width="match_parent"

@@ -81,7 +81,7 @@ def get_messages_from_conversation(request):
             for message in messages:
                 msg = {}
                 msg['content'] = message.content_of_msg
-                if sender_fk is account.fk:
+                if int(message.sender_fk.account_pk) is account.account_pk:
                     msg['sender'] = 'you'
                 else:
                     msg['sender'] = 'zin'

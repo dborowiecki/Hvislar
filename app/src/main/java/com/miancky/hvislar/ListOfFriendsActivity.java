@@ -32,14 +32,16 @@ public class ListOfFriendsActivity extends AppCompatActivity {
         String name = intent.getStringExtra("name");
         String email = intent.getStringExtra("email");
 
-        ListView listOfFriends = findViewById(R.id.lvFriends);
         final ArrayList<String> listItems = new ArrayList<>();
-        getListOfFriends(new VolleyCallback() {
-            @Override
-            public void onSuccess(List<String> result) {
-                listItems.addAll(result);
-            }
-        });
+        getListOfFriends();
+    }
+
+    public void goAsyncChat(View view){
+        getRoomName();
+    }
+
+    private void showListOfFriends(final List<String> listItems){
+        ListView listOfFriends = findViewById(R.id.lvFriends);
         ArrayAdapter<String> ad = new ArrayAdapter<>(ListOfFriendsActivity.this, android.R.layout.simple_list_item_1, listItems);
 
         // give adapter to ListView UI element to render
@@ -51,14 +53,14 @@ public class ListOfFriendsActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1,int position, long arg3)
             {
-                Toast.makeText(ListOfFriendsActivity.this, "" + position, Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(ListOfFriendsActivity.this, ChatActivity.class);
+                intent.putExtra("name", getIntent().getStringExtra("name"));
+                intent.putExtra("email", getIntent().getStringExtra("email"));
+                intent.putExtra("password", getIntent().getStringExtra("password"));
+                intent.putExtra("friendName", listItems.get(position));
+                startActivity(intent);
             }
         });
-        Toast.makeText(ListOfFriendsActivity.this, listItems.toString(), Toast.LENGTH_SHORT).show();
-    }
-
-    public void goAsyncChat(View view){
-        getRoomName();
     }
 
     public void goToAddingFriends(View view){
@@ -68,14 +70,14 @@ public class ListOfFriendsActivity extends AppCompatActivity {
         intent.putExtra("password", getIntent().getStringExtra("password"));
         startActivity(intent);
     }
-    private void getListOfFriends(final VolleyCallback callback){
+    private void getListOfFriends(){
         try {
             final String URL = "http://" + getString(R.string.ip) + getString(R.string.port) + "/getFriendList/";
             StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
-                            List<String> receivedUsers = new ArrayList<>();
+                            final List<String> receivedUsers = new ArrayList<>();
                             try {
                                 JSONObject JSONResponse = new JSONObject(response);
                                 if(!JSONResponse.getBoolean("success")){
@@ -83,9 +85,10 @@ public class ListOfFriendsActivity extends AppCompatActivity {
                                 }
                                 else{
                                     JSONArray friends = JSONResponse.getJSONArray("contacts");
-                                    for(int i = 0; i < friends.length(); i++)
+                                    for(int i = 0; i < friends.length(); i++) {
                                         receivedUsers.add(friends.getString(i));
-                                    callback.onSuccess(receivedUsers);
+                                    }
+                                    showListOfFriends(receivedUsers);
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();

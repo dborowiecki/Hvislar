@@ -157,7 +157,7 @@ public class AsyncChatActActivity extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                              //  TextView textView = findViewById(R.id.usersTextView);
+                                TextView textView = findViewById(R.id.usersTextView);
                                 //TODO: CHANGE FOR SOME KIND OF OBJECT WITH POSSIBILITY OF VOTE
                                 StringBuilder userList = new StringBuilder("USERS:");
                                 for(String user : users) {
@@ -169,7 +169,7 @@ public class AsyncChatActActivity extends AppCompatActivity {
                                 }
 
                                 listItems.add(userList.toString());
-                                //textView.setText(userList.toString());
+                                textView.setText(userList.toString());
                             }
                         });
                     }
@@ -230,6 +230,31 @@ public class AsyncChatActActivity extends AppCompatActivity {
                             }
                         });
                     }
+
+                    if(recived.get("type").toString().equals("warning")) {
+                        final String message = recived.get("message").toString();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                listItems.add(message);
+                            }
+                        });
+                    }
+
+                    if(recived.get("type").toString().equals("info_about_kick")) {
+                        final String message = recived.get("message").toString();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                listItems.add(message);
+                            }
+                        });
+                        String user = recived.get("username").toString();
+                        if(user.equals(username)){
+                            //TODO: SOME ACTION TO INFORM ABOUT KICK
+                            findViewById(R.id.btnSend).setEnabled(false);
+                        }
+                    }
                 }
                 catch (Exception e){
                     e.printStackTrace();
@@ -276,12 +301,9 @@ public class AsyncChatActActivity extends AppCompatActivity {
         }
     }
     public void voteForUser(String listString) {
-        Toast.makeText(AsyncChatActActivity.this, "aaaaaaaaaaaaaaaaaaaaaaaaaaaa", Toast.LENGTH_SHORT).show();
         String votedUser = listString.split(":")[0];
-        Toast.makeText(AsyncChatActActivity.this, "bbbbbbbbbbbbbbbbbbbbbbbbbbbbb", Toast.LENGTH_SHORT).show();
         System.out.print("VOTED USER: "+votedUser);
         Boolean correct = checkVote(votedUser);
-        Toast.makeText(AsyncChatActActivity.this, "ccccccccccccccccccccccccccccc", Toast.LENGTH_SHORT).show();
         if(correct) {
             try {
                 JSONObject sentObject = new JSONObject();
@@ -300,7 +322,6 @@ public class AsyncChatActActivity extends AppCompatActivity {
             Toast.makeText(AsyncChatActActivity.this, user + " " + username, Toast.LENGTH_SHORT).show();
 
             if (user.equals(username)) {
-                Toast.makeText(AsyncChatActActivity.this, "dddddddddddddddddddddddddddddddddddddddd", Toast.LENGTH_SHORT).show();
                 return true;
             }
         }

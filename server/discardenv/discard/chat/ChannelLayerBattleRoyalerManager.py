@@ -2,6 +2,7 @@ import datetime
 import threading
 import discard.modelsT as model
 import discard.scripts.MassConversationManager as mag
+import discard.chat_settings as s
 from asgiref.sync import async_to_sync
 from collections import defaultdict, OrderedDict
 from operator import itemgetter  
@@ -14,33 +15,39 @@ class BattleRoyalManager():
 		self.time = datetime.time(0, 0, 50)
 		self.voting = True
 		self.number_of_users = 1
-		self.time_between_votings = 50 
+		self.TIME_BETWEEN_VOTINGS = 50 
 		self.consumer_accounts = list()
 		self.consumer_channel_name = {}
 		self.consumer_votes = {}
 		self.channel_name = channel_name
+		self.started = False
 
 		#W TIMERZE Co 30 sekund oapalać głosowanie
 	
 	def start_battle_royale(self):
 		#self.time_to_next_vote = self.count_time_to_next_vote()
+		self.started = True
 		self.send_usernames()
 		#remove later
 		self.run_timer()
 
 	def run_timer(self):
-		t = threading.Timer(10, self.change_vote_state)
+		t = threading.Timer(self.TIME_BETWEEN_VOTINGS, self.change_vote_state)
 		t.start()
 
 
 	def change_vote_state(self):
 		print("Changing vote state")
+
 		to_kick = self.sum_up_voting()
 		self._remove_users(to_kick)
 
 		self.spread_the_news_about_vote(to_kick)
 
-		self.run_timer()
+		if len(self.consumer_accounts) is 2:
+			self._finish_battle()
+		else:
+			self.run_timer()
 
 
 	def spread_the_news_about_vote(self, kicked):
@@ -89,6 +96,7 @@ class BattleRoyalManager():
 	def add_consumer_account(self, consumer, consumer_channel_name):
 		self.consumer_accounts.append(consumer)
 		self.consumer_channel_name[consumer.username] = consumer_channel_name
+		print(self.consumer_accounts)
 
 	def remove_consumer_accounts(self, consumer_names):
 		self.send_message_about_kick(consumer_names)
@@ -140,7 +148,42 @@ class BattleRoyalManager():
 		for user in usernames:
 			mag.change_user_state(self.room_name, user)
 
+	def _finish_battle(self):
+		winner1 = self.consumer_accounts[0]
+		winner2 = self.consumer_accounts[1]
+		new_conversation = model.Conversation()
+		new_conversation.save()
+		added1 = model.AccountManager(winner1).add_friend(winner2, new_conversation)
+		added2 = model.AccountManager(winner2).add_friend(winner1, new_conversation)
 
+
+		async_to_sync(self.channel.group_send)(
+		    self.group, 
+		    {
+		        'type': 'finish_send',
+		        'message': "Good job, you won",
+		    })
+
+	def get_time_before_start(self, conv):
+		print("CONVERRRRRSSSATTTTTIIIIOOOOOOOOOUN: "+str(conv))
+
+		if self.started:
+		    return 0
+		else:
+		    #a = datetime.datetime.now()
+		    #time.sleep(3)
+		    #a = a + datetime.timedelta(seconds = s.TIME_TO_CLOSE_CONVERSATION.second)
+		    a = conv.creation_date + datetime.timedelta(seconds = s.TIME_TO_CLOSE_CONVERSATION.second)
+		    now = datetime.datetime.now()
+		    diff =  a - now 
+
+		    if diff.days < 0:
+		        d = 0
+		        self.started = True
+		    else:
+		        d = diff
+
+		    return d
 
 
 

@@ -30,12 +30,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
-//TODO: refactor, move to another class
-public class UserListAdapter extends BaseAdapter implements ListAdapter {
+public class InviteAdapter extends BaseAdapter implements ListAdapter {
     private ArrayList<String> list = new ArrayList<String>();
     private Context context;
 
-    public UserListAdapter(Context context, ArrayList<String> list) {
+    public InviteAdapter(Context context, ArrayList<String> list) {
         this.list = list;
         this.context = context;
     }

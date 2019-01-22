@@ -19,4 +19,5 @@
     <string name="typeHere">Type Here</string>
     <string name="applyText">Apply</string>
     <string name="refresh">Refresh</string>
+    <string name="title_activity_check_notifications">CheckNotificationsActivity</string>
 </resources>

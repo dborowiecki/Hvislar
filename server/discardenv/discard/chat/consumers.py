@@ -112,7 +112,6 @@ class ChatConsumer(WebsocketConsumer):
         
         
         if 'vote' in text_data_json.keys():
-            print("recived vote")
             voted_user = text_data_json['vote']
             self.channel_layer.xD[self.room_name].addVote(self.scope['account'], voted_user)
             return
@@ -126,7 +125,7 @@ class ChatConsumer(WebsocketConsumer):
         channel_layer = get_channel_layer()
         print("KURWA SENDER: "+sender)
 
-        if  self.channel_layer.xD[self.room_name].started is not 'chuj':
+        if  self.channel_layer.xD[self.room_name].started is True:
             async_to_sync(self.channel_layer.group_send)(
                 self.room_group_name,
                 {

@@ -37,7 +37,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void goAsyncChat(View view){
-        Intent intent = new Intent(LoginActivity.this, AsyncChatActActivity.class);
+        Intent intent = new Intent(LoginActivity.this, ChatActivity.class);
         startActivity(intent);
     }
 

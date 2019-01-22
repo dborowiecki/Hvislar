@@ -18,4 +18,5 @@
     <string name="descriptionOrder">Tell us a few words about yourself</string>
     <string name="typeHere">Type Here</string>
     <string name="applyText">Apply</string>
+    <string name="refresh">Refresh</string>
 </resources>

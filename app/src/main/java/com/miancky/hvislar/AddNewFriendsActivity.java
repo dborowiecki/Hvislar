@@ -1,15 +1,11 @@
 package com.miancky.hvislar;
 
 import android.content.Intent;
-import android.content.res.AssetManager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -28,7 +24,6 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -37,7 +32,6 @@ interface VolleyCallback{
 }
 public class AddNewFriendsActivity extends AppCompatActivity {
 
-    List<String> userList = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,69 +41,38 @@ public class AddNewFriendsActivity extends AppCompatActivity {
        String name = intent.getStringExtra("name");
        String email = intent.getStringExtra("email");
 
-        ListView listOfFriends = (ListView)findViewById(R.id.lvUsers);
-        // create the ArrayList to store the titles of nodes
-        final ArrayList<String> listItems = new ArrayList<String>();
-        //TODO: should take friends from db
-        listItems.add("test");
-        fetchUsersFromDb(null);
-        getUserList(new VolleyCallback() {
-            @Override
-            public void onSuccess(List<String> result) {
-                listItems.addAll(result);
-                //Toast.makeText(AddNewFriendsActivity.this, userList.toString(), Toast.LENGTH_LONG).show();
-            }
-        });
-        listItems.addAll(userList);
-        UserListAdapter ad = new UserListAdapter(AddNewFriendsActivity.this, listItems);
-
-        // give adapter to ListView UI element to render
-        listOfFriends.setAdapter(ad);
-
-    }
-
-
-
-    public void goToFriendList(View view){
-        Intent intent = new Intent(AddNewFriendsActivity.this, ListOfFriendsActivity.class);
-        intent.putExtra("name", getIntent().getStringExtra("name"));
-        intent.putExtra("email", intent.getStringExtra("email"));
-        startActivity(intent);
+        fetchUsersFromDb();
     }
 
     public void refresh(View view){
-       // getUserList(userList);
-        Toast.makeText(AddNewFriendsActivity.this, userList.toString(), Toast.LENGTH_LONG).show();
-
-        Toast.makeText(AddNewFriendsActivity.this, "refreshing", Toast.LENGTH_LONG).show();
+//       // getUserList(userList);
+//        Toast.makeText(AddNewFriendsActivity.this, userList.toString(), Toast.LENGTH_LONG).show();
+//
+//        Toast.makeText(AddNewFriendsActivity.this, "refreshing", Toast.LENGTH_LONG).show();
     }
 
-    public void fetchUsersFromDb(View view){
-     //   getUserList(userList);
+    public void fetchUsersFromDb(){
+        getUserList();
     }
-    public void getUserList(final VolleyCallback callback){
+
+    private void getUserList(){
         try {
-            AssetManager am = getApplicationContext().getAssets();
-            InputStream is = am.open("private/CONFIG");
-            final List<String> users = new LinkedList<>();
-            final String LOGIN_URL = convert(is, Charset.defaultCharset())+"getAllUsers.php";
-
-            StringRequest stringRequest = new StringRequest(Request.Method.POST, LOGIN_URL,
+            final String URL = "http://" + getString(R.string.ip) + getString(R.string.port) + "/getPotentialFriends/";
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
                     new Response.Listener<String>() {
-                        List<String> recivedUsers = new ArrayList<>();
                         @Override
                         public void onResponse(String response) {
+                            ArrayList<String> receivedUsers = new ArrayList<>();
                             try {
-                                JSONObject JSONresponse = new JSONObject(response);
-                                if(!JSONresponse.getBoolean("success")){
-                                    Toast.makeText(AddNewFriendsActivity.this,"Fetching friends list failed",Toast.LENGTH_LONG).show();
+                                JSONObject JSONResponse = new JSONObject(response);
+                                if(!JSONResponse.getBoolean("success")){
+                                    Toast.makeText(AddNewFriendsActivity.this,"Fetching potential friends failed",Toast.LENGTH_LONG).show();
                                 }
                                 else{
-                                    JSONArray friends = JSONresponse.getJSONArray("users");
-                                    for(int i = 0; i < friends.length(); i++){
-                                        recivedUsers.add(friends.getString(i));
-                                    }
-                                    callback.onSuccess(recivedUsers);
+                                    JSONArray potentialFriends = JSONResponse.getJSONArray("accounts");
+                                    for(int i = 0; i < potentialFriends.length(); i++)
+                                        receivedUsers.add(potentialFriends.getString(i));
+                                    showPotentialFriends(receivedUsers);
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -120,28 +83,50 @@ public class AddNewFriendsActivity extends AppCompatActivity {
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            Toast.makeText(AddNewFriendsActivity.this,error.toString()+LOGIN_URL,Toast.LENGTH_LONG).show();
+                            Toast.makeText(AddNewFriendsActivity.this,error.toString()+URL,Toast.LENGTH_LONG).show();
                         }
                     }){
                 @Override
                 protected Map<String,String> getParams(){
-                    Map<String,String> params = new HashMap<String, String>();
+                    Map<String,String> params = new HashMap<>();
+                    Intent intent = getIntent();
+                    params.put("email", intent.getStringExtra("email"));
+                    params.put("password", intent.getStringExtra("password"));
                     return params;
                 }
 
             };
-
 
             RequestQueue requestQueue = Volley.newRequestQueue(this);
             requestQueue.add(stringRequest);
         } catch (Exception e){
             Toast.makeText(AddNewFriendsActivity.this,e.toString(),Toast.LENGTH_LONG).show();
         }
-
     }
+
+    private void showPotentialFriends(ArrayList<String> potentialFriends){
+        ListView listOfPotentialFriends = findViewById(R.id.lvUsers);
+        UserListAdapter ad = new UserListAdapter(AddNewFriendsActivity.this, potentialFriends);
+
+        listOfPotentialFriends.setAdapter(ad);
+
+        listOfPotentialFriends.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1,int position, long arg3)
+            {
+                Toast.makeText(AddNewFriendsActivity.this, "" + position, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     //TODO: refactor, move to another class
     public String convert(InputStream inputStream, Charset charset) throws IOException {
         Scanner scanner = new Scanner(inputStream, charset.name());
         return scanner.useDelimiter("\\A").next();
+    }
+
+    public void addFriend(View view){
+
     }
 }

@@ -33,9 +33,7 @@ public class ListOfFriendsActivity extends AppCompatActivity {
         String email = intent.getStringExtra("email");
 
         ListView listOfFriends = findViewById(R.id.lvFriends);
-        // create the ArrayList to store the titles of nodes
         final ArrayList<String> listItems = new ArrayList<>();
-        //TODO: should take friends from db
         getListOfFriends(new VolleyCallback() {
             @Override
             public void onSuccess(List<String> result) {
@@ -63,17 +61,11 @@ public class ListOfFriendsActivity extends AppCompatActivity {
         getRoomName();
     }
 
-    public void goToUserProfile(View view){
-        Intent intent = new Intent(ListOfFriendsActivity.this, UserProfile.class);
-        intent.putExtra("name", getIntent().getStringExtra("name"));
-        intent.putExtra("email", intent.getStringExtra("email"));
-        startActivity(intent);
-    }
-
     public void goToAddingFriends(View view){
         Intent intent = new Intent(ListOfFriendsActivity.this, AddNewFriendsActivity.class);
         intent.putExtra("name", getIntent().getStringExtra("name"));
-        intent.putExtra("email", intent.getStringExtra("email"));
+        intent.putExtra("email", getIntent().getStringExtra("email"));
+        intent.putExtra("password", getIntent().getStringExtra("password"));
         startActivity(intent);
     }
     private void getListOfFriends(final VolleyCallback callback){

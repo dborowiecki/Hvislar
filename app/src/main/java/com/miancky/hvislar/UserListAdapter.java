@@ -71,8 +71,8 @@ public class UserListAdapter extends BaseAdapter implements ListAdapter {
         listItemText.setText(list.get(position));
 
         //Handle buttons and add onClickListeners
-        Button deleteBtn = (Button)view.findViewById(R.id.delete_btn);
-        Button addBtn = (Button)view.findViewById(R.id.add_btn);
+        Button deleteBtn = view.findViewById(R.id.delete_btn);
+        Button addBtn = view.findViewById(R.id.add_btn);
 
         deleteBtn.setOnClickListener(new View.OnClickListener(){
             @Override

@@ -25,8 +25,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import static java.lang.Thread.sleep;
-
 public class AsyncChatActActivity extends AppCompatActivity {
     WebSocketClient mWebSocketClient;
     Intent intent;
@@ -89,7 +87,7 @@ public class AsyncChatActActivity extends AppCompatActivity {
 
 
         try {
-            uri = new URI("ws://"+getString(R.string.ip)+":8000/ws/chat/"+roomName+"/");
+            uri = new URI("ws://"+getString(R.string.ip)+ getString(R.string.port) + "/ws/chat/"+roomName+"/");
             Toast.makeText(AsyncChatActActivity.this,uri.toString(),Toast.LENGTH_LONG).show();
 
         } catch (Exception e) {

@@ -50,6 +50,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.miancky.hvislar.RegisterActivity" />
         </activity>
+        <activity
+            android:name=".CheckNotificationsActivity"
+            android:label="@string/title_activity_check_notifications"
+            android:parentActivityName=".ListOfFriendsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.miancky.hvislar.ListOfFriendsActivity" />
+        </activity>
     </application>
 
 </manifest>

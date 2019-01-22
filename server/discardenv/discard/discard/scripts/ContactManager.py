@@ -109,7 +109,28 @@ def get_user_contacts(request):
 
     return JsonResponse(response)
 
+@csrf_exempt
+def get_invitations(request):
+    response = {'success': False}
+    try:
+        passwd               = request.POST.get("password")
+        email                = request.POST.get("email")
 
+        user_account         = Account.objects.get(passwd = passwd, email = email)
+        requests             = ContactRequest.objects.filter(account_fk = user_account.account_pk).all()
+
+        out = [Account.objects.get(
+                 account_pk = request.requesting_account_fk
+                 )
+                 for request in  requests]
+        response['invitations'] = out
+        response['success'] = True
+
+    except Exception as e:
+        print(e)
+        response['error'] = str(e)
+
+    return JsonResponse(response)
 
 @csrf_exempt
 def request_contact_response(request):
@@ -255,3 +276,18 @@ def get_potential_friends(request):
         response["error"] = str(e)
 
     return JsonResponse(response)
+
+
+
+def ten_rand_users(usrname):
+    queryset = Account.objects.filter().all()
+    accounts = [account for account in queryset]
+    account_list = list()
+    i = 0
+    while len(pom_accounts) < 10 and i < 30:
+        rand_number = random.randrange(len(accounts))
+        if accounts[rand_number] not in pom_accounts and accounts[rand_number] != user_account:
+            pom_accounts.append(accounts[rand_number])
+        i = i+1
+
+    return [a.username for a in account_list]

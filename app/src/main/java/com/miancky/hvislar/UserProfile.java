@@ -62,7 +62,7 @@ public class UserProfile extends AppCompatActivity {
 
     //TODO: move to another class
     public void getUserDescription(String name) {
-        final String GET_DESCRIPTION_URL = "http://" + getString(R.string.ip) + ":8000/getDescription/";
+        final String GET_DESCRIPTION_URL = "http://" + getString(R.string.ip) +  getString(R.string.port) + "/getDescription/";
         final String username = name;
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, GET_DESCRIPTION_URL,

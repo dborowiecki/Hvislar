@@ -59,7 +59,6 @@ public class AsyncChatActActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> arg0, View arg1,int position, long arg3)
             {
                 Object listItem = messages.getItemAtPosition(position);
-                Toast.makeText(AsyncChatActActivity.this, listItem.toString(), Toast.LENGTH_SHORT).show();
                 voteForUser(listItem.toString());
 
 
@@ -179,11 +178,18 @@ public class AsyncChatActActivity extends AppCompatActivity {
 
                     if(recived.get("type").toString().equals("voting_status")){
                         JSONArray removedUsers = recived.getJSONArray("removed");
+                        String rowText = "VOTES SUM UP";
 
-                        for(String user: users)
-                            for(int j=0; j<removedUsers.length();j++)
-                                if(removedUsers.getString(j).equals(user))
-                                    users.remove(user);
+                        listItems.add(rowText);
+                        for(String user: users) {
+                            for (int j = 0; j < removedUsers.length(); j++) {
+                                if (removedUsers.getString(j).equals(user))
+                                    usersIn.remove(user);
+                            }
+                        }
+                        for(int i=0;i<removedUsers.length();i++){
+                            listItems.add(removedUsers.getString(i) + " is out");
+                        }
 
                         runOnUiThread(new Runnable() {
                             @Override
@@ -191,14 +197,15 @@ public class AsyncChatActActivity extends AppCompatActivity {
                                 TextView textView = findViewById(R.id.usersTextView);
 
                                 StringBuilder userList = new StringBuilder("USERS:");
-                                for(String user : users)
+                                for(String user : usersIn)
                                     userList.append("\n"+user);
 
                                 textView.setText(userList);
+
+
+
                             }
                         });
-
-                        usersIn = users;
                     }
 
                     if(recived.get("type").toString().equals("chat_message")) {
@@ -231,15 +238,6 @@ public class AsyncChatActActivity extends AppCompatActivity {
                         });
                     }
 
-                    if(recived.get("type").toString().equals("warning")) {
-                        final String message = recived.get("message").toString();
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                listItems.add(message);
-                            }
-                        });
-                    }
 
                     if(recived.get("type").toString().equals("info_about_kick")) {
                         final String message = recived.get("message").toString();
@@ -252,7 +250,6 @@ public class AsyncChatActActivity extends AppCompatActivity {
                         String user = recived.get("username").toString();
                         if(user.equals(username)){
                             //TODO: SOME ACTION TO INFORM ABOUT KICK
-                            findViewById(R.id.btnSend).setEnabled(false);
                         }
                     }
                 }

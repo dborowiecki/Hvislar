@@ -17,6 +17,7 @@ class BattleRoyalManager():
 		self.number_of_users = 1
 		self.TIME_BETWEEN_VOTINGS = 50 
 		self.consumer_accounts = list()
+		self.discarded_accounts = list()
 		self.consumer_channel_name = {}
 		self.consumer_votes = {}
 		self.channel_name = channel_name
@@ -25,10 +26,8 @@ class BattleRoyalManager():
 		#W TIMERZE Co 30 sekund oapalać głosowanie
 	
 	def start_battle_royale(self):
-		#self.time_to_next_vote = self.count_time_to_next_vote()
 		self.started = True
 		self.send_usernames()
-		#remove later
 		self.run_timer()
 
 	def run_timer(self):
@@ -74,22 +73,23 @@ class BattleRoyalManager():
 
 	def send_message_about_kick(self, usernames):
 		for user in usernames:
-			#print(type(self.consumer_channel_name[user][0]))
 			async_to_sync(self.channel.group_send)(
 			    self.consumer_channel_name[user][0], 
 			    {
 			        'type': 'inform_about_kick',
 			        'username': user,
 			    })
-		#	except Exception as e:
-		#		print("cannot inform user "+user+" "+str(e))
 
 	def disconnect_users(self,users):
+		print("NO JESTEŚMY TUTAJ")
+		print("USERZY: "+str(users))
 		for user in users:
-			async_to_sync(self.channel.group_discard)(
-	            self.group,
-	            self.consumer_channel_name[user][1]
-	        )
+			if user not in self.discarded_accounts:
+				async_to_sync(self.channel.group_discard)(
+				    self.group,
+				    self.consumer_channel_name[user][1]
+				)
+				self.discarded_accounts.append(user)
 
 
 
@@ -100,16 +100,16 @@ class BattleRoyalManager():
 
 	def remove_consumer_accounts(self, consumer_names):
 		self.send_message_about_kick(consumer_names)
-		self.change_state_in_database(consumer_names)
 		self.disconnect_users(consumer_names)
+		self.change_state_in_database(consumer_names)
 		self.consumer_accounts = [a for a in self.consumer_accounts 
 		if a.username not in consumer_names]
 
 		for account in consumer_names:
-		#try:
-			self.consumer_channel_name.pop(account)
-		#	except Exception as e:
-		#		print('Unable to delete consumer channel' + str(e))
+			try:
+				self.consumer_channel_name.pop(account)
+			except Exception as e:
+				print('Unable to remove consumer channel' + str(e))
 
 
 	def count_time_to_next_vote(self):
@@ -118,7 +118,7 @@ class BattleRoyalManager():
 
 
 	def addVote(self, account, voted_for):
-		consumer_votes[account.username] = voted_for
+		self.consumer_votes[account.username] = voted_for
 
 	def sum_up_voting(self):
 		counted_votes = defaultdict(int)
@@ -165,14 +165,10 @@ class BattleRoyalManager():
 		    })
 
 	def get_time_before_start(self, conv):
-		print("CONVERRRRRSSSATTTTTIIIIOOOOOOOOOUN: "+str(conv))
 
 		if self.started:
 		    return 0
 		else:
-		    #a = datetime.datetime.now()
-		    #time.sleep(3)
-		    #a = a + datetime.timedelta(seconds = s.TIME_TO_CLOSE_CONVERSATION.second)
 		    a = conv.creation_date + datetime.timedelta(seconds = s.TIME_TO_CLOSE_CONVERSATION.second)
 		    now = datetime.datetime.now()
 		    diff =  a - now 

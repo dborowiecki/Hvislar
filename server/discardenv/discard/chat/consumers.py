@@ -4,6 +4,7 @@ from channels.generic.websocket import WebsocketConsumer
 from channels.layers import get_channel_layer
 from .ChannelLayerBattleRoyalerManager import BattleRoyalManager
 import discard.modelsT as model
+import discard.scripts.MassConversationManager as mc
 import discard.chat_settings as s
 import json
 import datetime
@@ -28,8 +29,6 @@ class ChatConsumer(WebsocketConsumer):
             self.channel_name
         )
 
-        #MA WYSYŁAĆ UŻYTKOWNIKOWI CZAS POZOSTAŁY DO ROZPOCZĘCIA:
-
         async_to_sync(self.channel_layer.group_add)(
              self.room_group_name,
              self.channel_name
@@ -37,26 +36,12 @@ class ChatConsumer(WebsocketConsumer):
 
         #check if is the same for all rooms or only for one 
         if hasattr(self.channel_layer,'xD') is False:
-            print("SHOULD START VOTE")
             self.channel_layer.xD = {}
-            #TODO: SETUP METHOD SHOULD DEFINE TIME AND AFTER COUNTDOWN SEND TO ALL USERS
-            #ANOTHER LIST OF ANOTHER USERS, 
-            #self.setup()
-            #should wait 10 seconds and then run battle royale
-          
+
         else:
             print("Not initialization")
 
-        print("ISTNIEJE?!?!!?!?!?!?!?!?n\n\n\n"+
-            str(hasattr(self.channel_layer.xD, c_pk))+
-            "\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-
-        
-        
-        print("--------\nCPK: "+c_pk+"\n-------")
-        print("--------\nCHANNEL LAYER: \n"+str(self.channel_layer)+"\n-------")
         if  c_pk not in self.channel_layer.xD.keys():
-            print("XDDDDDD\nNEW BATTLE ROYALE ARISING")
             self.channel_layer.xD[c_pk] = BattleRoyalManager(
                 self.channel_layer, 
                 self.room_group_name,
@@ -77,7 +62,7 @@ class ChatConsumer(WebsocketConsumer):
             self.user_group, 
             {
                 'type': 'start_message',
-                'message': "Alooo, ms ",
+                'message': "Alooo, ms "+self.scope['account'].username,
                 'time' : str(d)
             })
 
@@ -88,8 +73,7 @@ class ChatConsumer(WebsocketConsumer):
 
     def disconnect(self, close_code):
         # Leave room group
-        print('HELOOOOOO')
-        self.channel_layer.xD[self.room_name].remove_consumer_accounts([self.scope['account'].username])
+
         async_to_sync(self.channel_layer.group_discard)(
             self.room_group_name,
             self.channel_name
@@ -108,6 +92,11 @@ class ChatConsumer(WebsocketConsumer):
 
     # Receive message from WebSocket
     def receive(self, text_data):
+        if self.scope['account'] not in self.channel_layer.xD[self.room_name].consumer_accounts:
+            self.disconnect('22')
+            mc.change_user_state(self.room_name,self.scope['account'])
+
+
         text_data_json = json.loads(text_data)
         
         
@@ -123,7 +112,6 @@ class ChatConsumer(WebsocketConsumer):
         message = text_data_json['message']
         # Send message to room group
         channel_layer = get_channel_layer()
-        print("KURWA SENDER: "+sender)
 
         if  self.channel_layer.xD[self.room_name].started is True:
             async_to_sync(self.channel_layer.group_send)(
@@ -195,14 +183,15 @@ class ChatConsumer(WebsocketConsumer):
 
     def inform_about_kick(self, event):
         username = event['username']
-
+        print("SENDING SAD NEWS")
         # Send message to WebSocket
         self.send(text_data=json.dumps({
             'type': 'info_about_kick',
             #todo remove this message, added only for anroid functionality sustain
-            'message': str(username) + ' kick',
+            'message': str(username) + ', you just lost',
             'usernames': username
         }))
+        self.disconnect('32')
 
     
     def voting_send(self, event):

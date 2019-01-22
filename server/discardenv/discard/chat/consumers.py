@@ -98,46 +98,79 @@ class ChatConsumer(WebsocketConsumer):
     def can_send(self):
         self.started = True
 
+
+
+
+
+
+
+
+
     # Receive message from WebSocket
     def receive(self, text_data):
         text_data_json = json.loads(text_data)
-        message = text_data_json['message']
-
+        
+        
         if 'vote' in text_data_json.keys():
+            print("recived vote")
             voted_user = text_data_json['vote']
             self.channel_layer.xD[self.room_name].addVote(self.scope['account'], voted_user)
+            return
+        if 'sender' in text_data_json.keys():
+            sender  = text_data_json['sender']
+        else:
+            sender = "server"
 
-
+        message = text_data_json['message']
         # Send message to room group
         channel_layer = get_channel_layer()
-        print(str(channel_layer))
+        print("KURWA SENDER: "+sender)
 
-        if not self.scope['conversation'].allow_new_users:
+        if  self.channel_layer.xD[self.room_name].started is not 'chuj':
             async_to_sync(self.channel_layer.group_send)(
                 self.room_group_name,
                 {
-                    'type': 'chat_message',
-                    'message': message
+                    'type':   'chat_message',
+                    'message': message,
+                    'sender':  sender
                 }
             )
         else:
             async_to_sync(self.channel_layer.group_send)(
                 self.user_group,
                 {
-                    'type': 'chat_message',
-                    'message': "Didn't started yeet"
+                    'type': 'chat_warning',
+                    'message': "CONVERSATION DIDNT START YET"
                 }
             )
        
 
+
+
+
+
+
+
+
+
+
+
     # Receive message from room group
     def chat_message(self, event):
         message = event['message']
-
+        sender  = event['sender']
         # Send message to WebSocket
         self.send(text_data=json.dumps({
             'type': 'chat_message',
-            'sender': self.scope['account'].username,
+            'sender': sender,
+            'message': message
+        }))
+
+    def chat_warning(self, event):
+        message = event['message']
+
+        self.send(text_data=json.dumps({
+            'type': 'warning',
             'message': message
         }))
 

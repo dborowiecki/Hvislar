@@ -15,7 +15,7 @@ class BattleRoyalManager():
 		self.time = datetime.time(0, 0, 50)
 		self.voting = True
 		self.number_of_users = 1
-		self.time_between_votings = 50 
+		self.TIME_BETWEEN_VOTINGS = 50 
 		self.consumer_accounts = list()
 		self.consumer_channel_name = {}
 		self.consumer_votes = {}
@@ -26,12 +26,13 @@ class BattleRoyalManager():
 	
 	def start_battle_royale(self):
 		#self.time_to_next_vote = self.count_time_to_next_vote()
+		self.started = True
 		self.send_usernames()
 		#remove later
 		self.run_timer()
 
 	def run_timer(self):
-		t = threading.Timer(10, self.change_vote_state)
+		t = threading.Timer(self.TIME_BETWEEN_VOTINGS, self.change_vote_state)
 		t.start()
 
 
@@ -165,7 +166,7 @@ class BattleRoyalManager():
 
 	def get_time_before_start(self, conv):
 		print("CONVERRRRRSSSATTTTTIIIIOOOOOOOOOUN: "+str(conv))
-		
+
 		if self.started:
 		    return 0
 		else:

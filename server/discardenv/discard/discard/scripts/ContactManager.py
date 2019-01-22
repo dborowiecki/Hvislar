@@ -9,7 +9,9 @@ from ..modelsT.Account import Account
 from ..modelsT.Contact import Contact
 from ..modelsT.ContactRequest import ContactRequest
 from ..modelsT.Conversation import Conversation
+from random import randrange
 import json
+import math
 
 """
 This method contains method responsible for handling requests connected with user contacs and 
@@ -268,9 +270,10 @@ def get_potential_friends(request):
         user                 = Account.objects.get(passwd = passwd, email = email)
 
         if user is not None:
-            friends = Account.objects.all()[:10]
-            response['accounts'] = [account.username for account in friends]
+            response['accounts'] = [account.username for account in ten_rand_users() if
+            account.username is not user.username]
             response['success']  = True
+
     except Exception as e:
         print(e)
         response["error"] = str(e)
@@ -279,15 +282,17 @@ def get_potential_friends(request):
 
 
 
-def ten_rand_users(usrname):
+def ten_rand_users():
     queryset = Account.objects.filter().all()
     accounts = [account for account in queryset]
     account_list = list()
     i = 0
-    while len(pom_accounts) < 10 and i < 30:
-        rand_number = random.randrange(len(accounts))
-        if accounts[rand_number] not in pom_accounts and accounts[rand_number] != user_account:
-            pom_accounts.append(accounts[rand_number])
+    while len(account_list) < 10 and i < 30:
+        rand_number  = randrange(len(accounts))
+        next_account = accounts[rand_number]
+        if  next_account not in account_list:
+            account_list.append(next_account)
         i = i+1
 
-    return [a.username for a in account_list]
+    return [a for a in account_list]
+

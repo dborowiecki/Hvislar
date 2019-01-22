@@ -313,6 +313,7 @@ public class AsyncChatActActivity extends AppCompatActivity {
 
             } catch (Exception e) {
                 Log.i("Voting", e.getMessage());
+                Toast.makeText(AsyncChatActActivity.this, "You've been removed from the conversation.", Toast.LENGTH_SHORT).show();
             }
         }
     }

@@ -72,12 +72,22 @@ def get_messages_from_conversation(request):
 
         if conversation is not None:
             #TODO transform to get other than only message number
-            response['fetched_messages'] = list(
-                ConversationManager(conversation).get_messages_from_conversation(
+            response['fetched_messages'] = list()
+            messages = ConversationManager(conversation).get_messages_from_conversation(
                 number_of_messages = int(msg_number), 
                 time_from = msg_from,
                 time_to = msg_to)
-                .values('content_of_msg', 'sender_fk', 'send_time'))
+            
+            for message in messages:
+                msg = {}
+                msg['content'] = message.content_of_msg
+                if sender_fk is account.fk:
+                    msg['sender'] = 'you'
+                else:
+                    msg['sender'] = 'zin'
+                msg['send_time'] = message.send_time
+
+                response['fetched_messages'].append(msg)
             #response['fetched_messages'] = [[x.content_of_msg, x.send for x = []]
             response['success'] = True
             AccountManager(account).get_contact(interlocutor).status = False

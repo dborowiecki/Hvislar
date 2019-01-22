@@ -51,7 +51,10 @@ def close_adding(conversation):
     conversation.save()
 
 def change_user_state(conversation_name, user):
-    conversation = MassConversation.objects.get(room_name = conversation_name)
-    account = Account.objects.get(username=user)
-    print("PLACE FOR REMOVE NOIS")
-    conversation.remove_account_from_conversation(account)
+    try:
+        conversation = MassConversation.objects.get(room_name = conversation_name)
+        account = Account.objects.get(username=user)
+        print("PLACE FOR REMOVE NOIS")
+        conversation.remove_account_from_conversation(account)
+    except Exception as e:
+        print("Error while removing user from conversation")

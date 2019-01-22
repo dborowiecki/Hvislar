@@ -7,7 +7,7 @@
     <string name="description">Be one of the first persons to ever experience a brand new way of communication, friend finding and social games.</string>
     <string name="enjoy">ENJOY!</string>
     <string name="test">TEST</string>
-    <string name="ip">10.01.97</string>
+    <string name="ip">10.0.1.97</string>
     <string name="port">:8000</string>
     <string name="registration_completed">Registration completed successfully</string>
     <string name="registration_failed">Registration failed</string>
@@ -18,4 +18,6 @@
     <string name="descriptionOrder">Tell us a few words about yourself</string>
     <string name="typeHere">Type Here</string>
     <string name="applyText">Apply</string>
+    <string name="refresh">Refresh</string>
+    <string name="title_activity_check_notifications">CheckNotificationsActivity</string>
 </resources>

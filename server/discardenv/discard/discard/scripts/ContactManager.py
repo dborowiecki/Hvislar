@@ -119,12 +119,12 @@ def get_invitations(request):
         email                = request.POST.get("email")
 
         user_account         = Account.objects.get(passwd = passwd, email = email)
-        requests             = ContactRequest.objects.filter(account_fk = user_account.account_pk).all()
+        requests1             = ContactRequest.objects.filter(account_fk = user_account.account_pk).all()
 
         out = [Account.objects.get(
-                 account_pk = request.requesting_account_fk
-                 )
-                 for request in  requests]
+                 account_pk = r.requesting_account_fk.account_pk
+                 ).username
+                 for r in  requests1]
         response['invitations'] = out
         response['success'] = True
 
@@ -279,8 +279,6 @@ def get_potential_friends(request):
         response["error"] = str(e)
 
     return JsonResponse(response)
-
-
 
 def ten_rand_users():
     queryset = Account.objects.filter().all()

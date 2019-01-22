@@ -31,7 +31,7 @@ interface VolleyCallback{
     void onSuccess(List<String> result);
 }
 public class AddNewFriendsActivity extends AppCompatActivity {
-
+    int accualView = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,7 +104,58 @@ public class AddNewFriendsActivity extends AppCompatActivity {
         }
     }
 
+    private void getInvitations(){
+        try {
+            final String URL = "http://" + getString(R.string.ip) + getString(R.string.port) + "/getInvitations/";
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            ArrayList<String> receivedUsers = new ArrayList<>();
+                            try {
+                                JSONObject JSONResponse = new JSONObject(response);
+                                if(!JSONResponse.getBoolean("success")){
+                                    Toast.makeText(AddNewFriendsActivity.this,"Fetching potential friends failed",Toast.LENGTH_LONG).show();
+                                    Toast.makeText(AddNewFriendsActivity.this,JSONResponse.getString("error"),Toast.LENGTH_LONG).show();
+                                }
+                                else{
+                                    JSONArray potentialFriends = JSONResponse.getJSONArray("invitations");
+                                    for(int i = 0; i < potentialFriends.length(); i++)
+                                        receivedUsers.add(potentialFriends.getString(i));
+                                    showMyInvitations(receivedUsers);
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast.makeText(AddNewFriendsActivity.this,error.toString()+URL,Toast.LENGTH_LONG).show();
+                        }
+                    }){
+                @Override
+                protected Map<String,String> getParams(){
+                    Map<String,String> params = new HashMap<>();
+                    Intent intent = getIntent();
+                    params.put("email", intent.getStringExtra("email"));
+                    params.put("password", intent.getStringExtra("password"));
+                    return params;
+                }
+
+            };
+
+            RequestQueue requestQueue = Volley.newRequestQueue(this);
+            requestQueue.add(stringRequest);
+        } catch (Exception e){
+            Toast.makeText(AddNewFriendsActivity.this,e.toString(),Toast.LENGTH_LONG).show();
+        }
+    }
+
     private void showPotentialFriends(ArrayList<String> potentialFriends){
+        accualView = 0;
         ListView listOfPotentialFriends = findViewById(R.id.lvUsers);
         UserListAdapter ad = new UserListAdapter(AddNewFriendsActivity.this, potentialFriends);
 
@@ -118,6 +169,30 @@ public class AddNewFriendsActivity extends AppCompatActivity {
                 Toast.makeText(AddNewFriendsActivity.this, "" + position, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void showMyInvitations(ArrayList<String> potentialFriends){
+        accualView = 1;
+        ListView listOfPotentialFriends = findViewById(R.id.lvUsers);
+        UserListAdapter2 ad = new UserListAdapter2(AddNewFriendsActivity.this, potentialFriends);
+
+        listOfPotentialFriends.setAdapter(ad);
+
+        listOfPotentialFriends.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1,int position, long arg3)
+            {
+                Toast.makeText(AddNewFriendsActivity.this, "" + position, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    public void switchView(View view){
+        if(accualView == 0){
+            getInvitations();
+        }
+        else
+            getUserList();
     }
 
     //TODO: refactor, move to another class

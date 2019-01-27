@@ -12,6 +12,9 @@ import time
 import threading
 
 class ChatConsumer(WebsocketConsumer):
+    '''
+    Defines connection between user and server
+    '''
     def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.room_group_name = 'chat_%s' % self.room_name

@@ -35,7 +35,6 @@ def send_message(request):
             contact.status = True
             contact.save()
             response['success'] = True
-          #  conversation.add_message_to_conversation(m)
         else:
             response['found'] = False
 
@@ -71,7 +70,6 @@ def get_messages_from_conversation(request):
         conversation = contact.conversation_fk
 
         if conversation is not None:
-            #TODO transform to get other than only message number
             response['fetched_messages'] = list()
             messages = ConversationManager(conversation).get_messages_from_conversation(
                 number_of_messages = int(msg_number), 
@@ -88,7 +86,7 @@ def get_messages_from_conversation(request):
                 msg['send_time'] = message.send_time
 
                 response['fetched_messages'].append(msg)
-            #response['fetched_messages'] = [[x.content_of_msg, x.send for x = []]
+                
             response['success'] = True
             AccountManager(account).get_contact(interlocutor).status = False
 

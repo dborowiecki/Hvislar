@@ -27,7 +27,6 @@ def add_user_to_mass_conversation(request):
             k = conversation_closer(room)
             k.change()
             response['success'] = True
-            #Check if getting aviable conversations properly
             response['room_name'] = room.room_name
 
     except Exception as e:

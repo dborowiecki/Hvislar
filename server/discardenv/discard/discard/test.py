@@ -3,6 +3,9 @@ import time
 from django.db import models
 
 
+"""
+This class is used to switch off adding new users to conversation that was created
+"""
 class conversation_closer():
 
 	def __init__(self, conversation):

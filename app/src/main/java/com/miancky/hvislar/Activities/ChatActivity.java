@@ -1,4 +1,4 @@
-package com.miancky.hvislar;
+package com.miancky.hvislar.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +15,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.miancky.hvislar.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -74,7 +75,11 @@ public class ChatActivity extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-    private void establishServerConnection(){
+    private void establishServerConnection(View view){
+        establishServerConnection();
+    }
+
+    public void establishServerConnection(){
         final String GET_MESSAGES_URL = "http://" + getString(R.string.ip) +  getString(R.string.port) + "/getMessages/";
         final List<String> msgs= new ArrayList<>();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, GET_MESSAGES_URL,

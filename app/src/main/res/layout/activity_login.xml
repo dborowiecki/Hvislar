@@ -5,7 +5,7 @@
     android:id="@+id/coordinatorLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LoginActivity">
+    tools:context=".Activities.LoginActivity">
 
 
     <TextView
@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Login to Your Account"
+        android:text="@string/ask_for_login"
         android:textAlignment="center"
         android:textColor="@color/primaryTextColor"
         app:layout_constraintEnd_toEndOf="parent"
@@ -28,8 +28,8 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:ems="10"
-        android:hint="E-mail"
-        android:inputType="textPersonName"
+        android:hint="@string/e_mail"
+        android:inputType="textEmailAddress"
         android:textColor="@color/primaryTextColor"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -44,7 +44,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:ems="10"
-        android:hint="Password"
+        android:hint="@string/password"
         android:inputType="textPassword"
         android:textColor="@color/primaryTextColor"
         app:layout_constraintEnd_toEndOf="parent"
@@ -59,8 +59,8 @@
         android:layout_marginStart="108dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="108dp"
-        android:text="Sign in"
         android:onClick="login"
+        android:text="@string/login_button_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tPassword" />
@@ -73,24 +73,10 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:onClick="goToRegisterScreen"
-        android:text="Don't have an accout? Register Now!"
+        android:text="@string/register_button_text"
         android:textColor="@color/primaryTextColor"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bSingIn" />
-
-    <Button
-        android:id="@+id/goAsyncChatBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="8dp"
-        android:text="Temp chat"
-        android:onClick="goAsyncChat"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.501"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tRegister" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

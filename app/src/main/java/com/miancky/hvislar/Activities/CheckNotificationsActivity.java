@@ -1,7 +1,9 @@
-package com.miancky.hvislar;
+package com.miancky.hvislar.Activities;
 
 import android.os.Bundle;
 import android.app.Activity;
+
+import com.miancky.hvislar.R;
 
 public class CheckNotificationsActivity extends Activity {
 

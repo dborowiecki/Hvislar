@@ -1,4 +1,4 @@
-package com.miancky.hvislar;
+package com.miancky.hvislar.Activities;
 
 import android.app.Activity;
 import android.content.Context;
@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
 import android.widget.TextView;
+
+import com.miancky.hvislar.R;
 
 import java.util.ArrayList;
 import java.util.List;

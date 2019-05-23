@@ -1,4 +1,4 @@
-package com.miancky.hvislar;
+package com.miancky.hvislar.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +15,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.miancky.hvislar.R;
+import com.miancky.hvislar.Complementary.UserListAdapter;
+import com.miancky.hvislar.Complementary.UserListAdapter2;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,7 +35,7 @@ interface VolleyCallback{
     void onSuccess(List<String> result);
 }
 public class AddNewFriendsActivity extends AppCompatActivity {
-    int accualView = 0;
+    int actualView = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -156,7 +159,7 @@ public class AddNewFriendsActivity extends AppCompatActivity {
     }
 
     private void showPotentialFriends(ArrayList<String> potentialFriends){
-        accualView = 0;
+        actualView = 0;
         ListView listOfPotentialFriends = findViewById(R.id.lvUsers);
         UserListAdapter ad = new UserListAdapter(AddNewFriendsActivity.this, potentialFriends);
 
@@ -173,7 +176,7 @@ public class AddNewFriendsActivity extends AppCompatActivity {
     }
 
     private void showMyInvitations(ArrayList<String> potentialFriends){
-        accualView = 1;
+        actualView = 1;
         ListView listOfPotentialFriends = findViewById(R.id.lvUsers);
         UserListAdapter2 ad = new UserListAdapter2(AddNewFriendsActivity.this, potentialFriends);
 
@@ -189,7 +192,7 @@ public class AddNewFriendsActivity extends AppCompatActivity {
         });
     }
     public void switchView(View view){
-        if(accualView == 0){
+        if(actualView == 0){
             getInvitations();
         }
         else

@@ -1,4 +1,4 @@
-package com.miancky.hvislar;
+package com.miancky.hvislar.Complementary;
 
 import android.app.Activity;
 import android.content.Context;
@@ -18,6 +18,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.miancky.hvislar.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,11 +32,11 @@ import java.util.Map;
 import java.util.Scanner;
 
 //TODO: refactor, move to another class
-public class UserListAdapter extends BaseAdapter implements ListAdapter {
+public class UserListAdapter2 extends BaseAdapter implements ListAdapter {
     private ArrayList<String> list = new ArrayList<String>();
     private Context context;
 
-    public UserListAdapter(Context context, ArrayList<String> list) {
+    public UserListAdapter2(Context context, ArrayList<String> list) {
         this.list = list;
         this.context = context;
     }
@@ -71,7 +72,7 @@ public class UserListAdapter extends BaseAdapter implements ListAdapter {
 
         //Handle buttons and add onClickListeners
         //Button deleteBtn = view.findViewById(R.id.delete_btn);
-        Button addBtn = view.findViewById(R.id.add_btn);
+        Button accept = view.findViewById(R.id.add_btn);
 
 //        deleteBtn.setOnClickListener(new View.OnClickListener(){
 //            @Override
@@ -80,11 +81,11 @@ public class UserListAdapter extends BaseAdapter implements ListAdapter {
 //                notifyDataSetChanged();
 //            }
 //        });
-        addBtn.setOnClickListener(new View.OnClickListener(){
+        accept.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 Toast.makeText(context, list.get(position), Toast.LENGTH_LONG).show();
-                addNewFriend(list.get(position), position);
+                addNewFriend(list.get(position), position, true);
                 notifyDataSetChanged();
             }
         });
@@ -92,8 +93,8 @@ public class UserListAdapter extends BaseAdapter implements ListAdapter {
         return view;
     }
 
-    public void addNewFriend(final String newFriendName, int position){
-        final String ADD_FRIEND_URL = "http://" + context.getString(R.string.ip) +  context.getString(R.string.port) + "/requestContact/";
+    public void addNewFriend(final String newFriendName, int position, final boolean answer){
+        final String ADD_FRIEND_URL = "http://" + context.getString(R.string.ip) +  context.getString(R.string.port) + "/answerContactRequest/";
         final int POSITION = position;
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, ADD_FRIEND_URL,
@@ -103,9 +104,9 @@ public class UserListAdapter extends BaseAdapter implements ListAdapter {
                         try {
                             JSONObject JSONResponse = new JSONObject(response);
                             if (!JSONResponse.getBoolean("success"))
-                                Toast.makeText(context, "Inviting user failed.", Toast.LENGTH_LONG).show();
+                                Toast.makeText(context, JSONResponse.getString("error"), Toast.LENGTH_LONG).show();
                             else {
-                                Toast.makeText(context, "User invited correctly.", Toast.LENGTH_LONG).show();
+                                Toast.makeText(context, "Friend added correctly.", Toast.LENGTH_LONG).show();
                                 list.remove(POSITION);
                                 notifyDataSetChanged();
                             }
@@ -127,8 +128,8 @@ public class UserListAdapter extends BaseAdapter implements ListAdapter {
                 String message = intent.getStringExtra("name")+" invites to join his contacts.";
                 params.put("email", intent.getStringExtra("email"));
                 params.put("password", intent.getStringExtra("password"));
-                params.put("message", message);
-                params.put("contact_name", newFriendName);
+                params.put("response", answer == true? "Accept" : "Deny");
+                params.put("responsed_user", newFriendName);
                 return params;
             }
         };

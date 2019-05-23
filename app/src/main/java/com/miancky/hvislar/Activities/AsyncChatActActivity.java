@@ -1,4 +1,4 @@
-package com.miancky.hvislar;
+package com.miancky.hvislar.Activities;
 
 import android.content.Intent;
 import android.os.Build;
@@ -13,6 +13,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.miancky.hvislar.R;
 
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;

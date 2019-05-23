@@ -20,4 +20,9 @@
     <string name="applyText">Apply</string>
     <string name="refresh">Refresh</string>
     <string name="title_activity_check_notifications">CheckNotificationsActivity</string>
+    <string name="ask_for_login">Login to Your Account</string>
+    <string name="e_mail">E-mail</string>
+    <string name="password">Password</string>
+    <string name="register_button_text">Don\'t have an accout? Register Now!</string>
+    <string name="login_button_text">Sign in</string>
 </resources>

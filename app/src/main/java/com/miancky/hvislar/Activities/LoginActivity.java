@@ -1,4 +1,4 @@
-package com.miancky.hvislar;
+package com.miancky.hvislar.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,13 +6,16 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.miancky.hvislar.R;
+import com.miancky.hvislar.Complementary.UserProfile;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.miancky.hvislar.ServerCommunicator.sendRequest;
+import static com.miancky.hvislar.ServerCommunication.ServerCommunicator.sendRequest;
 
 public class LoginActivity extends ResponsiveActivity{
     @Override
@@ -23,11 +26,6 @@ public class LoginActivity extends ResponsiveActivity{
 
     public void goToRegisterScreen(View view){
         Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
-        startActivity(intent);
-    }
-
-    public void goAsyncChat(View view){
-        Intent intent = new Intent(LoginActivity.this, ChatActivity.class);
         startActivity(intent);
     }
 
@@ -61,7 +59,7 @@ public class LoginActivity extends ResponsiveActivity{
     }
 
     @Override
-    void errorReaction() {
+    public void errorReaction() {
         Toast.makeText(this.getApplicationContext(),"Communication with server failed.",Toast.LENGTH_LONG).show();
     }
 }

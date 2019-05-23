@@ -1,10 +1,12 @@
-package com.miancky.hvislar;
+package com.miancky.hvislar.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.miancky.hvislar.R;
 
 public class MainActivity extends AppCompatActivity {
     @Override

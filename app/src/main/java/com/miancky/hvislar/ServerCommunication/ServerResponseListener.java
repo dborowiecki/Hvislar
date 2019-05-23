@@ -1,8 +1,9 @@
-package com.miancky.hvislar;
+package com.miancky.hvislar.ServerCommunication;
 
 import android.widget.Toast;
 
 import com.android.volley.Response;
+import com.miancky.hvislar.Activities.ResponsiveActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;

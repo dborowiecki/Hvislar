@@ -1,4 +1,4 @@
-package com.miancky.hvislar;
+package com.miancky.hvislar.ServerCommunication;
 
 import androidx.annotation.Nullable;
 

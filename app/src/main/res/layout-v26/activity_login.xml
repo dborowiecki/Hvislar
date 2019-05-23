@@ -2,27 +2,23 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/coordinatorLayout2"
+    android:id="@+id/coordinatorLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activities.RegisterActivity">
+    tools:context=".Activities.LoginActivity">
 
 
-    <EditText
-        android:id="@+id/tName"
-        android:layout_width="0dp"
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:ems="10"
-        android:hint="Name"
-        android:inputType="textPersonName"
+        android:layout_marginTop="8dp"
+        android:text="@string/ask_for_login"
+        android:textAlignment="center"
         android:textColor="@color/primaryTextColor"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/tEmail"
@@ -32,64 +28,57 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:ems="10"
-        android:hint="E-mail"
+        android:hint="@string/e_mail"
         android:inputType="textEmailAddress"
         android:textColor="@color/primaryTextColor"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tName" />
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        android:autofillHints="email" />
 
     <EditText
         android:id="@+id/tPassword"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="43dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:ems="10"
-        android:hint="Password"
+        android:hint="@string/password"
         android:inputType="textPassword"
         android:textColor="@color/primaryTextColor"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tEmail" />
+        app:layout_constraintTop_toBottomOf="@+id/tEmail"
+        android:autofillHints="password" />
 
     <Button
-        android:id="@+id/bRegister"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:id="@+id/bSingIn"
+        android:layout_width="154dp"
+        android:layout_height="54dp"
+        android:layout_marginStart="108dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        android:onClick="register"
-        android:text="Sign up"
+        android:layout_marginEnd="108dp"
+        android:onClick="login"
+        android:text="@string/login_button_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tPassword" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/tRegister"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:onClick="goToLoginScreen"
-        android:text="Back to Login"
+        android:onClick="goToRegisterScreen"
+        android:text="@string/register_button_text"
         android:textColor="@color/primaryTextColor"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bRegister" />
+        app:layout_constraintTop_toBottomOf="@+id/bSingIn" />
 
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Make a New Account"
-        android:textAlignment="center"
-        android:textColor="@color/primaryTextColor"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

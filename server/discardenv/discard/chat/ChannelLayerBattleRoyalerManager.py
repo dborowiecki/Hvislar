@@ -7,7 +7,9 @@ from asgiref.sync import async_to_sync
 from collections import defaultdict, OrderedDict
 from operator import itemgetter  
 class BattleRoyalManager():
-
+	'''
+	Class that manages battle royale logistic
+	'''
 	def __init__(self, channel_layer, channel_group, channel_name, room_name):
 		self.group = channel_group
 		self.channel = channel_layer
@@ -22,8 +24,6 @@ class BattleRoyalManager():
 		self.consumer_votes = {}
 		self.channel_name = channel_name
 		self.started = False
-
-		#W TIMERZE Co 30 sekund oapalać głosowanie
 	
 	def start_battle_royale(self):
 		self.started = True

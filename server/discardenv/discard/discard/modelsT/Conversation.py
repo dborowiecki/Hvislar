@@ -86,7 +86,6 @@ class Conversation(models.Model):
 
     #     messages = messages[:number_of_messages]
     #     return messages
-    #     #TODO extend request for time period or sth
 
     class Meta:
         db_table = '"conversation"'

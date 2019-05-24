@@ -6,18 +6,23 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.miancky.hvislar.R;
 import com.miancky.hvislar.Complementary.UserProfile;
+import com.miancky.hvislar.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.miancky.hvislar.Complementary.Security.hashString;
 import static com.miancky.hvislar.ServerCommunication.ServerCommunicator.sendRequest;
 
 public class LoginActivity extends ResponsiveActivity{
+
+    private String sentPassword;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,24 +34,30 @@ public class LoginActivity extends ResponsiveActivity{
         startActivity(intent);
     }
 
-    private void loginUser(){
+    private void loginUser() throws NoSuchAlgorithmException {
         Map<String, String> params = new HashMap<>();
-        params.put("password", ((EditText) findViewById(R.id.tPassword)).getText().toString().trim());
-        params.put("email",((EditText) findViewById(R.id.tEmail)).getText().toString().toLowerCase().trim());
-        sendRequest(this, "login", params);
+        String password = ((EditText) findViewById(R.id.tPassword)).getText().toString().trim();
+        sentPassword = hashString(password);
+        params.put(getString(R.string.password_field), sentPassword);
+        params.put(getString(R.string.email_field), ((EditText) findViewById(R.id.tEmail)).getText().toString().toLowerCase().trim());
+        sendRequest(this, getString(R.string.login_sub_url), params);
     }
 
     public void login(View view) {
-        loginUser();
+        try {
+            loginUser();
+        } catch (NoSuchAlgorithmException e) {
+            errorReaction();
+        }
     }
 
     @Override
     public void positiveResponseReaction(JSONObject response) {
         try {
             Intent intent = new Intent( this.getApplicationContext(), UserProfile.class);
-            intent.putExtra("name",response.getString("name"));
-            intent.putExtra("email", response.getString("email"));
-            intent.putExtra("password", ((EditText) findViewById(R.id.tPassword)).getText().toString().trim());
+            intent.putExtra(getString(R.string.username_field), response.getString(getString(R.string.username_field)));
+            intent.putExtra(getString(R.string.email_field), response.getString(getString(R.string.email_field)));
+            intent.putExtra(getString(R.string.password_field), sentPassword);
             startActivity(intent);
         } catch (JSONException e) {
             errorReaction();
@@ -55,11 +66,11 @@ public class LoginActivity extends ResponsiveActivity{
 
     @Override
     public void negativeResponseReaction(JSONObject response) {
-        Toast.makeText(this.getApplicationContext(),"Login failed. Incorrect data!",Toast.LENGTH_LONG).show();
+        Toast.makeText(this.getApplicationContext(),R.string.incorrect_login_data,Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void errorReaction() {
-        Toast.makeText(this.getApplicationContext(),"Communication with server failed.",Toast.LENGTH_LONG).show();
+        Toast.makeText(this.getApplicationContext(),R.string.processing_error,Toast.LENGTH_LONG).show();
     }
 }

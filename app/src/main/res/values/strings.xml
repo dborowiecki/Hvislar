@@ -2,6 +2,11 @@
     <string name="app_name">Discard</string>
     <string name="title_activity_things">Things</string>
     <string name="title_activity_register">Register</string>
+    <string name="login_sub_url">login</string>
+    <string name="register_sub_url">register</string>
+    <string name ="email_field">email</string>
+    <string name="username_field">name</string>
+    <string name="password_field">password</string>
     <string name="tap_here_to_continue">Tap Here to Continue</string>
     <string name="welcome">Welcome to Hvislar!</string>
     <string name="description">Be one of the first persons to ever experience a brand new way of communication, friend finding and social games.</string>
@@ -23,6 +28,10 @@
     <string name="ask_for_login">Login to Your Account</string>
     <string name="e_mail">E-mail</string>
     <string name="password">Password</string>
-    <string name="register_button_text">Don\'t have an accout? Register Now!</string>
+    <string name="register_button_text">Don\'t have an account? Register Now!</string>
     <string name="login_button_text">Sign in</string>
+    <string name="processing_error">There was ann error processing the request.</string>
+    <string name="incorrect_login_data">Login failed. Incorrect data!</string>
+    <string name="password_too_short">Password have to be longer than 5 characters!</string>
+    <string name="incorrect_email">Email is incorrect!</string>
 </resources>

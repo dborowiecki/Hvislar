@@ -1,5 +1,9 @@
 from django.db import close_old_connections
 import discard.modelsT as model
+
+from .scripts.LoginRegister import hash_password
+
+
 class QueryAuthMiddleware:
     """
     Middleware authentication search for user in conversation
@@ -17,7 +21,7 @@ class QueryAuthMiddleware:
 
             try:
                 login, password = headers[b'auth'].decode().split(',')
-                account = model.Account.objects.get(passwd = password, username = login)
+                account = model.Account.objects.get(passwd = hash_password(password), username = login)
                 room = self.get_room_name(scope)
                 conversation = model.MassConversation.objects.get(room_name = room)
                 print("HALOOOOO")

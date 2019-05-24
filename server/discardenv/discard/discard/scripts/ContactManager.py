@@ -4,6 +4,8 @@ from django.contrib.auth import authenticate, login, get_user_model
 from django.http import JsonResponse
 from datetime import datetime
 from django.views.decorators.csrf import csrf_exempt
+
+from ..scripts.LoginRegister import hash_password
 from ..modelsT.AccountManager import AccountManager
 from ..modelsT.Account import Account
 from ..modelsT.Contact import Contact
@@ -70,7 +72,7 @@ def request_contact(request):
             'success': False
         }
     try:
-        passwd          = request.POST.get("password")
+        passwd          = hash_password(request.POST.get("password"))
         email           = request.POST.get("email")
         contact_name    = request.POST.get("contact_name")
         user_message    = request.POST.get("message")
@@ -99,7 +101,7 @@ def request_contact(request):
 def get_user_contacts(request):
     response = {'success': False}
     try:
-        passwd          = request.POST.get("password")
+        passwd          = hash_password(request.POST.get("password"))
         email           = request.POST.get("email")
         user_account    = Account.objects.get(passwd = passwd, email = email)
         contacts        = AccountManager(user_account).get_contact_list()
@@ -115,7 +117,7 @@ def get_user_contacts(request):
 def get_invitations(request):
     response = {'success': False}
     try:
-        passwd               = request.POST.get("password")
+        passwd               = hash_password(request.POST.get("password"))
         email                = request.POST.get("email")
 
         user_account         = Account.objects.get(passwd = passwd, email = email)
@@ -157,7 +159,7 @@ def request_contact_response(request):
     """
     response = {'success': False}
     try:
-        passwd               = request.POST.get("password")
+        passwd               = hash_password(request.POST.get("password"))
         email                = request.POST.get("email")
         responded_user       = request.POST.get("responsed_user")
         response_m             = request.POST.get("response")
@@ -207,7 +209,7 @@ def add_user_description(request):
         'success': False
     }
     try:
-        passwd               = request.POST.get("password")
+        passwd               = hash_password(request.POST.get("password"))
         email                = request.POST.get("email")
         description          = request.POST.get("description")
         user                 = Account.objects.get(passwd = passwd, email = email)
@@ -264,7 +266,7 @@ def get_potential_friends(request):
         'success': False
     }
     try:
-        passwd               = request.POST.get("password")
+        passwd               = hash_password(request.POST.get("password"))
         email                = request.POST.get("email")
 
         user                 = Account.objects.get(passwd = passwd, email = email)

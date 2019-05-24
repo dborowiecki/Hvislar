@@ -4,6 +4,8 @@ from django.contrib.auth import authenticate, login, get_user_model
 from django.http import JsonResponse
 from datetime import datetime
 from django.views.decorators.csrf import csrf_exempt
+
+from ..scripts.LoginRegister import hash_password
 from ..modelsT.Account import Account
 from ..modelsT.AccountManager import AccountManager
 from ..modelsT.Message import Message
@@ -19,7 +21,7 @@ def send_message(request):
 
     try:
         user          = request.POST.get("email")
-        password      = request.POST.get("password")
+        password      = hash_password(request.POST.get("password"))
         reciver_name  = request.POST.get("reciver_name")
         message       = request.POST.get("message")
         account       = Account.objects.get(passwd = password, email = user)
@@ -56,7 +58,7 @@ def get_messages_from_conversation(request):
     }
     try:
         user          = request.POST.get("email")
-        password      = request.POST.get("password")
+        password      = hash_password(request.POST.get("password"))
         user2         = request.POST.get("interlocutor")
         msg_number    = request.POST.get("number_of_messages")
         msg_from      = None

@@ -1,9 +1,13 @@
+import traceback
+
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, get_user_model
 from django.http import JsonResponse
 from datetime import datetime
 from django.views.decorators.csrf import csrf_exempt
+
+from ..scripts.LoginRegister import hash_password
 from ..modelsT.Account import Account
 from ..modelsT.MassConversation import MassConversation
 import json
@@ -17,7 +21,7 @@ def add_user_to_mass_conversation(request):
         'success': False
     }
     try:
-        passwd               = request.POST.get("password")
+        passwd               = hash_password(request.POST.get("password"))
         email                = request.POST.get("email")
         user                 = Account.objects.get(passwd = passwd, email = email)
 

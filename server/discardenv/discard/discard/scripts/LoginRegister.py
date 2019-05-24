@@ -6,6 +6,12 @@ from datetime import datetime
 from django.views.decorators.csrf import csrf_exempt
 from ..modelsT import Account
 import json
+import hashlib
+
+
+def hash_password(password):
+    return hashlib.sha256(password.encode("utf-8")).hexdigest()
+
 
 @csrf_exempt
 def register(request):
@@ -14,10 +20,10 @@ def register(request):
         }
     try:
         data = request.POST
-        
+
         account = Account(
             username = request.POST.get("username"),
-            passwd   = request.POST.get("password"),
+            passwd   = hash_password(request.POST.get("password")),
             email    = request.POST.get("email"))
 
         print("X"+request.POST.get("email"))
@@ -41,7 +47,7 @@ def logon(request):
         }
     try:
         data     = request.POST
-        passwd   = request.POST.get("password")
+        passwd   = hash_password(request.POST.get("password"))
         email    = request.POST.get("email")
         print(email)
         print(passwd)

@@ -5,16 +5,7 @@ import android.widget.Toast;
 
 import com.miancky.hvislar.R;
 
-import java.nio.charset.Charset;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-
 public class Security {
-    public static String hashString(String string) throws NoSuchAlgorithmException {
-        MessageDigest digest = MessageDigest.getInstance("SHA-256");
-        return new String(digest.digest(string.getBytes(Charset.forName("UTF-8"))));
-    }
-
     public static boolean checkPassword(String password, Context context){
         if(password.length() < 5){
             Toast.makeText(context,context.getString(R.string.password_too_short),Toast.LENGTH_LONG).show();

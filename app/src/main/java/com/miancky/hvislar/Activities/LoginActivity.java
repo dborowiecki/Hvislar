@@ -12,11 +12,9 @@ import com.miancky.hvislar.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.miancky.hvislar.Complementary.Security.hashString;
 import static com.miancky.hvislar.ServerCommunication.ServerCommunicator.sendRequest;
 
 public class LoginActivity extends ResponsiveActivity{
@@ -34,21 +32,16 @@ public class LoginActivity extends ResponsiveActivity{
         startActivity(intent);
     }
 
-    private void loginUser() throws NoSuchAlgorithmException {
+    private void loginUser() {
         Map<String, String> params = new HashMap<>();
-        String password = ((EditText) findViewById(R.id.tPassword)).getText().toString().trim();
-        sentPassword = hashString(password);
+        sentPassword = ((EditText) findViewById(R.id.tPassword)).getText().toString().trim();
         params.put(getString(R.string.password_field), sentPassword);
         params.put(getString(R.string.email_field), ((EditText) findViewById(R.id.tEmail)).getText().toString().toLowerCase().trim());
         sendRequest(this, getString(R.string.login_sub_url), params);
     }
 
     public void login(View view) {
-        try {
             loginUser();
-        } catch (NoSuchAlgorithmException e) {
-            errorReaction();
-        }
     }
 
     @Override

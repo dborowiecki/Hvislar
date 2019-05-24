@@ -1,7 +1,5 @@
 package com.miancky.hvislar.ServerCommunication;
 
-import android.widget.Toast;
-
 import com.android.volley.Response;
 import com.miancky.hvislar.Activities.ResponsiveActivity;
 
@@ -25,7 +23,7 @@ class ServerResponseListener implements Response.Listener<String> {
             else
                 activity.negativeResponseReaction(JSONResponse);
         } catch (JSONException e) {
-            Toast.makeText(activity,"Login failed. Incorrect data!",Toast.LENGTH_LONG).show();
+           activity.errorReaction();
         }
     }
 }

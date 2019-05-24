@@ -11,14 +11,12 @@ import com.miancky.hvislar.R;
 
 import org.json.JSONObject;
 
-import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 
 import static com.miancky.hvislar.Complementary.Security.checkEmail;
 import static com.miancky.hvislar.Complementary.Security.checkPassword;
 import static com.miancky.hvislar.Complementary.Security.checkUserName;
-import static com.miancky.hvislar.Complementary.Security.hashString;
 import static com.miancky.hvislar.ServerCommunication.ServerCommunicator.sendRequest;
 
 public class RegisterActivity extends ResponsiveActivity {
@@ -37,13 +35,12 @@ public class RegisterActivity extends ResponsiveActivity {
         finish();
     }
 
-    private void registerUser() throws NoSuchAlgorithmException {
-        String password = ((EditText) findViewById(R.id.tPassword)).getText().toString().trim();
+    private void registerUser() {
+        sentPassword = ((EditText) findViewById(R.id.tPassword)).getText().toString().trim();
         sentUsername = ((EditText) findViewById(R.id.tName)).getText().toString().trim();
         sentEmail = ((EditText) findViewById(R.id.tEmail)).getText().toString().toLowerCase().trim();
-        sentPassword = hashString(password);
         Context cxt = getApplicationContext();
-        if(!checkPassword(password, cxt) || !checkEmail(sentEmail, cxt) || !checkUserName(sentUsername, cxt)) return;
+        if(!checkPassword(sentPassword, cxt) || !checkEmail(sentEmail, cxt) || !checkUserName(sentUsername, cxt)) return;
         Map<String,String> params = new HashMap<>();
         params.put("username", sentUsername);
         params.put("password", sentPassword);
@@ -52,11 +49,7 @@ public class RegisterActivity extends ResponsiveActivity {
     }
 
     public void register(View view) {
-        try {
             registerUser();
-        } catch (NoSuchAlgorithmException e) {
-            errorReaction();
-        }
     }
 
     @Override

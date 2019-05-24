@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import com.miancky.hvislar.R;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -64,7 +65,11 @@ public class RegisterActivity extends ResponsiveActivity {
 
     @Override
     public void negativeResponseReaction(JSONObject response) {
-        Toast.makeText(getApplicationContext(),R.string.registration_failed,Toast.LENGTH_LONG).show();
+        try {
+            Toast.makeText(getApplicationContext(),response.getString("error"),Toast.LENGTH_LONG).show();
+        } catch (JSONException e) {
+            errorReaction();
+        }
     }
 
     @Override

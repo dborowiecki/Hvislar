@@ -27,6 +27,13 @@ def register(request):
             email    = request.POST.get("email"))
 
         print("X"+request.POST.get("email"))
+        if Account.objects.get(username=request.POST.get("username")) is not None:
+            response['error'] = "User with this name exists!"
+            return JsonResponse(response)
+        if Account.objects.get(email=request.POST.get("email")) is not None:
+            response['error'] = "User with this email exists!"
+            return JsonResponse(response)
+
         account.save()
         if Account.objects.get(username= request.POST.get("username")) is not None:
             response['username'] = account.username

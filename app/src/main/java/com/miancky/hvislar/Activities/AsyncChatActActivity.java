@@ -29,30 +29,26 @@ import java.util.List;
 import java.util.Map;
 
 public class AsyncChatActActivity extends AppCompatActivity {
-    WebSocketClient mWebSocketClient;
-    Intent intent;
-    List<String> usersIn = new LinkedList<>();
-    ArrayList<String> listItems = new ArrayList<>();
-    String username;
+
+    private WebSocketClient mWebSocketClient;
+    private Intent intent;
+    private List<String> usersIn;
+    private ArrayList<String> listItems;
+    private String username;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        usersIn = new LinkedList<>();
+        listItems = new ArrayList<>();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_async_chat_act);
         intent = getIntent();
 
         username = intent.getStringExtra("name");
-        //TODO: HAVE TO DISCONNECT ON RETURNING FROM VIEW
         ArrayAdapter<String> ad = new ArrayAdapter<>(AsyncChatActActivity.this, android.R.layout.simple_list_item_1, listItems);
-
-
         final ListView messages = findViewById(R.id.lvMessages);
-        // create the ArrayList to store the titles of nodes
         connectWebSocket(ad, messages);
-
-
-        // give adapter to ListView UI element to render
         messages.setAdapter(ad);
-
 
         updateMessages(ad);
         messages.setOnItemClickListener(new AdapterView.OnItemClickListener()
@@ -63,11 +59,8 @@ public class AsyncChatActActivity extends AppCompatActivity {
             {
                 Object listItem = messages.getItemAtPosition(position);
                 voteForUser(listItem.toString());
-
-
             }
         });
-
     }
 
     private void connectWebSocket(final ArrayAdapter adapter, final ListView lV) {

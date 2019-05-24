@@ -1,4 +1,4 @@
-package com.miancky.hvislar.Activities;
+package com.miancky.hvislar.Complementary;
 
 import android.app.Activity;
 import android.content.Context;

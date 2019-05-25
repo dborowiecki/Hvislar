@@ -6,6 +6,8 @@
     <string name="register_sub_url">register</string>
     <string name="friend_list_sub_url">getFriendList</string>
     <string name="add_description_sub_url">addDescription</string>
+    <string name="chat_sub_url">sendMessage</string>
+    <string name="refresh_sub_url">getMessages</string>
     <string name="join_massive_conversation_sub_url">joinNewMassConversation</string>
     <string name ="email_field">email</string>
     <string name="username_field">name</string>
@@ -37,7 +39,8 @@
     <string name="incorrect_login_data">Login failed. Incorrect data!</string>
     <string name="password_too_short">Password have to be longer than 5 characters!</string>
     <string name="incorrect_email">Email is incorrect!</string>
-    <string name="email_not_unique">There\'s already an account with this email address!</string>
     <string name="description_set_error">There was a problem with your description.</string>
-    <string name="friend_list_error">"Fetching friends list failed"</string>
+    <string name="friend_list_error">"Fetching friends list failed."</string>
+    <string name="message_failure">Cannot send message!</string>
+    <string name="refresh_failure">Cannot download messages!</string>
 </resources>

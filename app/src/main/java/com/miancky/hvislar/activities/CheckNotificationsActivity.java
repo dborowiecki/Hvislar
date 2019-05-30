@@ -1,4 +1,4 @@
-package com.miancky.hvislar.Activities;
+package com.miancky.hvislar.activities;
 
 import android.os.Bundle;
 import android.app.Activity;

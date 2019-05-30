@@ -1,4 +1,4 @@
-package com.miancky.hvislar.Activities;
+package com.miancky.hvislar.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,7 +7,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.miancky.hvislar.Complementary.MessageAdapter;
+import com.miancky.hvislar.complementary.MessageAdapter;
 import com.miancky.hvislar.R;
 
 import org.json.JSONArray;
@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.miancky.hvislar.ServerCommunication.ServerCommunicator.sendRequest;
+import static com.miancky.hvislar.communication.ServerCommunicator.sendRequest;
 
 public class ChatActivity extends ResponsiveActivity {
 
@@ -47,7 +47,7 @@ public class ChatActivity extends ResponsiveActivity {
         sendRequest(this, getString(R.string.chat_sub_url), params);
     }
 
-    public void establishServerConnection(){
+    private void establishServerConnection(){
         sending = false;
         Map<String, String> params = new HashMap<>();
         Intent intent = getIntent();
@@ -56,6 +56,10 @@ public class ChatActivity extends ResponsiveActivity {
         params.put("interlocutor", intent.getStringExtra("friendName"));
         params.put("number_of_messages", "50");
         sendRequest(this, getString(R.string.refresh_sub_url), params);
+    }
+
+    public void establishServerConnection(View view){
+        establishServerConnection();
     }
 
     private void refreshMessages(List<String> msgs){

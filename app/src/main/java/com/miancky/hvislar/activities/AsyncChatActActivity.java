@@ -1,4 +1,4 @@
-package com.miancky.hvislar.Activities;
+package com.miancky.hvislar.activities;
 
 import android.content.Intent;
 import android.os.Build;

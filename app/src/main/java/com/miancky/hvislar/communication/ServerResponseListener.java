@@ -1,7 +1,7 @@
-package com.miancky.hvislar.ServerCommunication;
+package com.miancky.hvislar.communication;
 
 import com.android.volley.Response;
-import com.miancky.hvislar.Activities.ResponsiveActivity;
+import com.miancky.hvislar.activities.ResponsiveActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;

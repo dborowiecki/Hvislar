@@ -1,4 +1,4 @@
-package com.miancky.hvislar.Activities;
+package com.miancky.hvislar.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 

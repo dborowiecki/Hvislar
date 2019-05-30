@@ -1,4 +1,4 @@
-package com.miancky.hvislar.Activities;
+package com.miancky.hvislar.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,5 +18,6 @@ public class MainActivity extends AppCompatActivity {
     public void goToLoginScreen(View view){
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
+        finish();
     }
 }

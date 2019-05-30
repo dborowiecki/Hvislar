@@ -1,4 +1,4 @@
-package com.miancky.hvislar.Activities;
+package com.miancky.hvislar.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,7 +6,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.miancky.hvislar.Complementary.UserProfile;
 import com.miancky.hvislar.R;
 
 import org.json.JSONException;
@@ -15,7 +14,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.miancky.hvislar.ServerCommunication.ServerCommunicator.sendRequest;
+import static com.miancky.hvislar.communication.ServerCommunicator.sendRequest;
 
 public class LoginActivity extends ResponsiveActivity{
 
@@ -52,6 +51,7 @@ public class LoginActivity extends ResponsiveActivity{
             intent.putExtra(getString(R.string.email_field), response.getString(getString(R.string.email_field)));
             intent.putExtra(getString(R.string.password_field), sentPassword);
             startActivity(intent);
+            finish();
         } catch (JSONException e) {
             errorReaction();
         }

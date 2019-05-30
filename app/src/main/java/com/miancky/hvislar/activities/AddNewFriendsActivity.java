@@ -1,4 +1,4 @@
-package com.miancky.hvislar.Activities;
+package com.miancky.hvislar.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,8 +16,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.miancky.hvislar.R;
-import com.miancky.hvislar.Complementary.UserListAdapter;
-import com.miancky.hvislar.Complementary.UserListAdapter2;
+import com.miancky.hvislar.complementary.UserListAdapter;
+import com.miancky.hvislar.complementary.UserListInvitationAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -178,7 +178,7 @@ public class AddNewFriendsActivity extends AppCompatActivity {
     private void showMyInvitations(ArrayList<String> potentialFriends){
         actualView = 1;
         ListView listOfPotentialFriends = findViewById(R.id.lvUsers);
-        UserListAdapter2 ad = new UserListAdapter2(AddNewFriendsActivity.this, potentialFriends);
+        UserListInvitationAdapter ad = new UserListInvitationAdapter(AddNewFriendsActivity.this, potentialFriends);
 
         listOfPotentialFriends.setAdapter(ad);
 

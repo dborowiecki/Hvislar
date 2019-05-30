@@ -1,4 +1,4 @@
-package com.miancky.hvislar.Activities;
+package com.miancky.hvislar.activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,10 +15,10 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.miancky.hvislar.Complementary.Security.checkEmail;
-import static com.miancky.hvislar.Complementary.Security.checkPassword;
-import static com.miancky.hvislar.Complementary.Security.checkUserName;
-import static com.miancky.hvislar.ServerCommunication.ServerCommunicator.sendRequest;
+import static com.miancky.hvislar.complementary.Security.checkEmail;
+import static com.miancky.hvislar.complementary.Security.checkPassword;
+import static com.miancky.hvislar.complementary.Security.checkUserName;
+import static com.miancky.hvislar.communication.ServerCommunicator.sendRequest;
 
 public class RegisterActivity extends ResponsiveActivity {
 
@@ -43,9 +43,9 @@ public class RegisterActivity extends ResponsiveActivity {
         Context cxt = getApplicationContext();
         if(!checkPassword(sentPassword, cxt) || !checkEmail(sentEmail, cxt) || !checkUserName(sentUsername, cxt)) return;
         Map<String,String> params = new HashMap<>();
-        params.put("username", sentUsername);
-        params.put("password", sentPassword);
-        params.put("email", sentEmail);
+        params.put(getString(R.string.username_reg_field), sentUsername);
+        params.put(getString(R.string.password_field), sentPassword);
+        params.put(getString(R.string.email_field), sentEmail);
         sendRequest(this, getString(R.string.register_sub_url), params);
     }
 
@@ -61,6 +61,7 @@ public class RegisterActivity extends ResponsiveActivity {
         intent.putExtra(getString(R.string.email_field), sentEmail);
         intent.putExtra(getString(R.string.password_field), sentPassword);
         startActivity(intent);
+        finish();
     }
 
     @Override

@@ -16,7 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning,UnusedAttribute">
-        <activity android:name=".Activities.MainActivity">
+        <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -24,35 +24,35 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Activities.LoginActivity"
-            android:parentActivityName=".Activities.MainActivity" />
+            android:name=".activities.LoginActivity"
+            android:parentActivityName=".activities.MainActivity" />
         <activity
-            android:name=".Activities.RegisterActivity"
+            android:name=".activities.RegisterActivity"
             android:label="@string/title_activity_register"
-            android:parentActivityName=".Activities.LoginActivity"
+            android:parentActivityName=".activities.LoginActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Complementary.UserProfile" />
-        <activity android:name=".Activities.ChatActivity" />
-        <activity android:name=".Activities.ListOfFriendsActivity" />
-        <activity android:name=".Activities.AddNewFriendsActivity" />
+        <activity android:name=".activities.UserProfile" />
+        <activity android:name=".activities.ChatActivity" />
+        <activity android:name=".activities.ListOfFriendsActivity" />
+        <activity android:name=".activities.AddNewFriendsActivity" />
         <activity
-            android:name=".Activities.AsyncChatActActivity"
+            android:name=".activities.AsyncChatActActivity"
             android:exported="true" />
         <activity
-            android:name=".Activities.SetDescriptionActivity"
+            android:name=".activities.SetDescriptionActivity"
             android:label="@string/title_activity_set_description"
-            android:parentActivityName=".Activities.RegisterActivity">
+            android:parentActivityName=".activities.RegisterActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.miancky.hvislar.Activities.RegisterActivity" />
+                android:value="com.miancky.hvislar.activities.RegisterActivity" />
         </activity>
         <activity
-            android:name=".Activities.CheckNotificationsActivity"
+            android:name=".activities.CheckNotificationsActivity"
             android:label="@string/title_activity_check_notifications"
-            android:parentActivityName=".Activities.ListOfFriendsActivity">
+            android:parentActivityName=".activities.ListOfFriendsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.miancky.hvislar.Activities.ListOfFriendsActivity" />
+                android:value="com.miancky.hvislar.activities.ListOfFriendsActivity" />
         </activity>
     </application>
 

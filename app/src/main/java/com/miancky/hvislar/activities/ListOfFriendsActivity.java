@@ -1,4 +1,4 @@
-package com.miancky.hvislar.Activities;
+package com.miancky.hvislar.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,11 +19,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.miancky.hvislar.ServerCommunication.ServerCommunicator.sendRequest;
+import static com.miancky.hvislar.communication.ServerCommunicator.sendRequest;
 
 public class ListOfFriendsActivity extends ResponsiveActivity {
-
-    private boolean massiveConversation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,12 +30,7 @@ public class ListOfFriendsActivity extends ResponsiveActivity {
         getListOfFriends();
     }
 
-    public void goAsyncChat(View view){
-        getRoomName();
-    }
-
     private void showListOfFriends(final List<String> listItems){
-        massiveConversation = false;
         ListView listOfFriends = findViewById(R.id.lvFriends);
         ArrayAdapter<String> ad = new ArrayAdapter<>(ListOfFriendsActivity.this, android.R.layout.simple_list_item_1, listItems);
 
@@ -74,36 +67,15 @@ public class ListOfFriendsActivity extends ResponsiveActivity {
         sendRequest(this,getString(R.string.friend_list_sub_url),params);
     }
 
-    private void getRoomName() {
-        massiveConversation = true;
-        Intent intent = getIntent();
-        String password = intent.getStringExtra("password");
-        String email = intent.getStringExtra("email");
-        Map<String, String> params = new HashMap<>();
-        params.put("password", password);
-        params.put("email", email);
-        sendRequest(this, getString(R.string.join_massive_conversation_sub_url), params);
-    }
-
     @Override
     public void positiveResponseReaction(JSONObject response) {
         try {
-            if(massiveConversation){
-                Intent intent = new Intent(ListOfFriendsActivity.this, AsyncChatActActivity.class);
-                intent.putExtra("name", getIntent().getStringExtra("name"));
-                intent.putExtra("password", getIntent().getStringExtra("password"));
-                intent.putExtra("email", getIntent().getStringExtra("email"));
-                intent.putExtra("roomName", response.getString("room_name"));
-                startActivity(intent);
-            }else {
-                JSONArray friends;
-                List<String> receivedUsers = new ArrayList<>();
-                    friends = response.getJSONArray("contacts");
-                    for (int i = 0; i < friends.length(); i++) {
-                        receivedUsers.add(friends.getString(i));
-                    }
-                    showListOfFriends(receivedUsers);
-            }
+            JSONArray friends;
+            List<String> receivedUsers = new ArrayList<>();
+            friends = response.getJSONArray("contacts");
+            for (int i = 0; i < friends.length(); i++)
+                receivedUsers.add(friends.getString(i));
+            showListOfFriends(receivedUsers);
         } catch (JSONException e) {
             errorReaction();
         }
@@ -111,8 +83,7 @@ public class ListOfFriendsActivity extends ResponsiveActivity {
 
     @Override
     public void negativeResponseReaction(JSONObject response) {
-        if(massiveConversation) Toast.makeText(ListOfFriendsActivity.this, "Fail finding room", Toast.LENGTH_LONG).show();
-        else Toast.makeText(ListOfFriendsActivity.this,R.string.friend_list_error,Toast.LENGTH_LONG).show();
+        Toast.makeText(this,R.string.friend_list_error,Toast.LENGTH_LONG).show();
     }
 
     @Override

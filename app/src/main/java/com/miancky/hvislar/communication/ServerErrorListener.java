@@ -1,8 +1,8 @@
-package com.miancky.hvislar.ServerCommunication;
+package com.miancky.hvislar.communication;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.miancky.hvislar.Activities.ResponsiveActivity;
+import com.miancky.hvislar.activities.ResponsiveActivity;
 
 class ServerErrorListener implements Response.ErrorListener {
 

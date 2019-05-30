@@ -1,4 +1,4 @@
-package com.miancky.hvislar.Activities;
+package com.miancky.hvislar.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,7 +6,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.miancky.hvislar.Complementary.UserProfile;
 import com.miancky.hvislar.R;
 
 import org.json.JSONObject;
@@ -14,7 +13,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.miancky.hvislar.ServerCommunication.ServerCommunicator.sendRequest;
+import static com.miancky.hvislar.communication.ServerCommunicator.sendRequest;
 
 public class SetDescriptionActivity extends ResponsiveActivity {
 
@@ -51,6 +50,7 @@ public class SetDescriptionActivity extends ResponsiveActivity {
         intent.putExtra("email", email);
         intent.putExtra("password", password);
         startActivity(intent);
+        finish();
     }
 
     public void setDescription(View view){

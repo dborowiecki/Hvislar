@@ -1,4 +1,4 @@
-package com.miancky.hvislar.Complementary;
+package com.miancky.hvislar.complementary;
 
 import android.app.Activity;
 import android.content.Context;
@@ -31,11 +31,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
-public class InviteAdapter extends BaseAdapter implements ListAdapter {
+//TODO: refactor, move to another class
+public class UserListAdapter extends BaseAdapter implements ListAdapter {
     private ArrayList<String> list = new ArrayList<String>();
     private Context context;
 
-    public InviteAdapter(Context context, ArrayList<String> list) {
+    public UserListAdapter(Context context, ArrayList<String> list) {
         this.list = list;
         this.context = context;
     }

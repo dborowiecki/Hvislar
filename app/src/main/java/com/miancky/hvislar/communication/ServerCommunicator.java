@@ -1,11 +1,11 @@
-package com.miancky.hvislar.ServerCommunication;
+package com.miancky.hvislar.communication;
 
 import android.content.Context;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
-import com.miancky.hvislar.Activities.ResponsiveActivity;
+import com.miancky.hvislar.activities.ResponsiveActivity;
 import com.miancky.hvislar.R;
 
 import java.util.Map;
@@ -22,7 +22,7 @@ public class ServerCommunicator {
 
     private static RequestQueue getRequestQueue(Context context){
         if (requestQueue == null)
-            requestQueue = Volley.newRequestQueue(context);
+            requestQueue = Volley.newRequestQueue(context.getApplicationContext());
         return requestQueue;
     }
 }

@@ -11,6 +11,7 @@
     <string name="join_massive_conversation_sub_url">joinNewMassConversation</string>
     <string name ="email_field">email</string>
     <string name="username_field">name</string>
+    <string name="username_reg_field">username</string>
     <string name="password_field">password</string>
     <string name="tap_here_to_continue">Tap Here to Continue</string>
     <string name="welcome">Welcome to Discard!</string>

@@ -6,9 +6,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
-
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -18,7 +15,6 @@ import com.android.volley.toolbox.Volley;
 import com.miancky.hvislar.R;
 import com.miancky.hvislar.complementary.UserListAdapter;
 import com.miancky.hvislar.complementary.UserListInvitationAdapter;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,7 +23,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AddNewFriendsActivity extends AppCompatActivity {
+public class AddNewFriendsActivity extends ResponsiveActivity {
     int actualView = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -183,5 +179,20 @@ public class AddNewFriendsActivity extends AppCompatActivity {
         }
         else
             getUserList();
+    }
+
+    @Override
+    public void positiveResponseReaction(JSONObject response) {
+
+    }
+
+    @Override
+    public void negativeResponseReaction(JSONObject response) {
+
+    }
+
+    @Override
+    public void errorReaction() {
+
     }
 }

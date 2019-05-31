@@ -23,17 +23,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
-interface VolleyCallback{
-    void onSuccess(List<String> result);
-}
+
 public class AddNewFriendsActivity extends AppCompatActivity {
     int actualView = 0;
     @Override
@@ -46,13 +39,6 @@ public class AddNewFriendsActivity extends AppCompatActivity {
        String email = intent.getStringExtra("email");
 
         fetchUsersFromDb();
-    }
-
-    public void refresh(View view){
-//       // getUserList(userList);
-//        Toast.makeText(AddNewFriendsActivity.this, userList.toString(), Toast.LENGTH_LONG).show();
-//
-//        Toast.makeText(AddNewFriendsActivity.this, "refreshing", Toast.LENGTH_LONG).show();
     }
 
     public void fetchUsersFromDb(){
@@ -197,15 +183,5 @@ public class AddNewFriendsActivity extends AppCompatActivity {
         }
         else
             getUserList();
-    }
-
-    //TODO: refactor, move to another class
-    public String convert(InputStream inputStream, Charset charset) throws IOException {
-        Scanner scanner = new Scanner(inputStream, charset.name());
-        return scanner.useDelimiter("\\A").next();
-    }
-
-    public void addFriend(View view){
-
     }
 }

@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Hvislar.iml" filepath="$PROJECT_DIR$/Hvislar.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/copyAndroid.iml" filepath="$PROJECT_DIR$/copyAndroid.iml" />
     </modules>
   </component>
 </project>

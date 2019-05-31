@@ -7,17 +7,6 @@
     tools:context=".activities.AddNewFriendsActivity">
 
     <Button
-        android:id="@+id/btnGetFriends"
-        android:layout_width="114dp"
-        android:layout_height="54dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:onClick="refresh"
-        android:text="@string/refresh"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
         android:id="@+id/btnSwitchView"
         android:layout_width="151dp"
         android:layout_height="54dp"

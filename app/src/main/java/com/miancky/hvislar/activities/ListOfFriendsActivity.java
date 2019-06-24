@@ -32,7 +32,7 @@ public class ListOfFriendsActivity extends ResponsiveActivity {
 
     private void showListOfFriends(final List<String> listItems){
         ListView listOfFriends = findViewById(R.id.lvFriends);
-        ArrayAdapter<String> ad = new ArrayAdapter<>(ListOfFriendsActivity.this, android.R.layout.simple_list_item_1, listItems);
+        ArrayAdapter<String> ad = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listItems);
 
         listOfFriends.setAdapter(ad);
 

@@ -29,15 +29,6 @@ public class AddNewFriendsActivity extends ResponsiveActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_new_friends);
-
-       Intent intent = getIntent();
-       String name = intent.getStringExtra("name");
-       String email = intent.getStringExtra("email");
-
-        fetchUsersFromDb();
-    }
-
-    public void fetchUsersFromDb(){
         getUserList();
     }
 

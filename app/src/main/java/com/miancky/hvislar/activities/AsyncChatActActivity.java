@@ -66,44 +66,26 @@ public class AsyncChatActActivity extends AppCompatActivity {
     private void connectWebSocket(final ArrayAdapter adapter, final ListView lV) {
         URI uri;
         Map<String,String> httpHeaders = new HashMap<>();
-        //TODO: Should take login and password from intent
         final String name = intent.getStringExtra("name");
         final String password = intent.getStringExtra("password");
         final String roomName = intent.getStringExtra("roomName");
         //TODO: DEFAULT BUILD FOR TEMP CHAT WITHOUT USER AUTH, REMOVE IT LATER
-        if( name == null ||password ==null) {
-            //AUTHENTICATION STRING BUILD AS String 'login,password'
-           // httpHeaders.put( "auth", "dobryKolega,123qwe" );
-            //roomName = roomName!=null? roomName : "lobby";
-
-        }
-        else
+        if (name != null && password != null) {
             httpHeaders.put("auth",name+","+password);
-
-
+        }
         try {
             uri = new URI("ws://"+getString(R.string.ip)+ getString(R.string.port) + "/ws/chat/"+roomName+"/");
             Toast.makeText(AsyncChatActActivity.this,uri.toString(),Toast.LENGTH_LONG).show();
-
         } catch (Exception e) {
             e.printStackTrace();
             return;
         }
-        /* W httpHeader powinien być token uwierzytelniający zamiast loginu i hasła
-        *
-         */
         mWebSocketClient = new WebSocketClient(uri, httpHeaders) {
             LinkedList<String> users;
-
             @Override
             public void onOpen(ServerHandshake serverHandshake) {
-
                 Log.i("Websocket", "Opened");
                 String message = "Hello from " + Build.MANUFACTURER + " " + Build.MODEL;
-                mWebSocketClient.setAttachment("pomocy");
-
-                //TODO: Additional messages should be in sent json object
-                //TODO: in final version shouldn't push this message
                 JSONObject arr = new JSONObject();
                 try {
                     arr.put("message", message);
@@ -112,12 +94,7 @@ public class AsyncChatActActivity extends AppCompatActivity {
                 catch (Exception e){
                     Log.i("JSONObject", e.getMessage());
                 }
-              //  mWebSocketClient.send(arr.toString());
             }
-            /*
-             Communication is based on JSONObjects
-
-             */
             @Override
             public void onMessage(String s) {
                 try {
@@ -137,9 +114,6 @@ public class AsyncChatActActivity extends AppCompatActivity {
                             }
                         });
                     }
-
-
-
 
                     if(recived.get("type").toString().equals("usernames")){
                         JSONArray temp = recived.getJSONArray("usernames");
@@ -169,13 +143,9 @@ public class AsyncChatActActivity extends AppCompatActivity {
                         });
                     }
 
-
-
-
                     if(recived.get("type").toString().equals("voting_status")){
                         JSONArray removedUsers = recived.getJSONArray("removed");
                         String rowText = "VOTES SUM UP";
-
                         listItems.add(rowText);
                         for(String user: users) {
                             for (int j = 0; j < removedUsers.length(); j++) {
@@ -191,15 +161,10 @@ public class AsyncChatActActivity extends AppCompatActivity {
                             @Override
                             public void run() {
                                 TextView textView = findViewById(R.id.usersTextView);
-
                                 StringBuilder userList = new StringBuilder("USERS:");
                                 for(String user : usersIn)
                                     userList.append("\n"+user);
-
                                 textView.setText(userList);
-
-
-
                             }
                         });
                     }
@@ -211,17 +176,12 @@ public class AsyncChatActActivity extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-
                                 String rowText = "";
-
                                 rowText=sender+": "+message;
-
                                 listItems.add(rowText);
 
                             }
                         });
-
-                     //   adapter.notifyDataSetChanged();
                     }
 
                     if(recived.get("type").toString().equals("warning")) {
